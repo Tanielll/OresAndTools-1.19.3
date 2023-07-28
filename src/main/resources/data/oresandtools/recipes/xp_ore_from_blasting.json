@@ -1,9 +1,0 @@
-{
-  "type": "minecraft:blasting",
-  "ingredient": {
-    "item": "oresandtools:xp_ore"
-  },
-  "result": "minecraft:stone",
-  "experience": 5.0,
-  "cookingtime": 100
-}

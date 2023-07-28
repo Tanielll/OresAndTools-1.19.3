@@ -4,15 +4,12 @@
   "key": {
     "#": {
       "item": "oresandtools:valyrian_ingot"
-    },
-    "S": {
-      "item": "minecraft:stick"
     }
   },
   "pattern": [
-    "##",
-    "#S",
-    " S"
+    "###",
+    "# #",
+    "# #"
   ],
   "result": {
     "item": "oresandtools:valyrian_leggings"

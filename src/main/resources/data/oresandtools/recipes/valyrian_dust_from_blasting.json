@@ -1,9 +1,0 @@
-{
-  "type": "minecraft:blasting",
-  "ingredient": {
-    "item": "oresandtools:valyrian_ore"
-  },
-  "result": "oresandtools:valyrian_dust",
-  "experience": 2.0,
-  "cookingtime": 80
-}

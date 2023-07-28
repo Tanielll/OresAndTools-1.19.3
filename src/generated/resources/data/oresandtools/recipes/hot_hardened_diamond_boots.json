@@ -4,15 +4,11 @@
   "key": {
     "#": {
       "item": "oresandtools:hot_hardened_diamond"
-    },
-    "S": {
-      "item": "minecraft:stick"
     }
   },
   "pattern": [
-    "##",
-    "#S",
-    " S"
+    "# #",
+    "# #"
   ],
   "result": {
     "item": "oresandtools:hot_hardened_diamond_boots"

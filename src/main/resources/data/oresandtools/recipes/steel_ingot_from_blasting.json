@@ -1,9 +1,0 @@
-{
-  "type": "minecraft:blasting",
-  "ingredient": {
-    "item": "oresandtools:steel_chunk"
-  },
-  "result": "oresandtools:steel_ingot",
-  "experience": 1.5,
-  "cookingtime": 150
-}

@@ -4,15 +4,12 @@
   "key": {
     "#": {
       "item": "minecraft:copper_ingot"
-    },
-    "S": {
-      "item": "minecraft:stick"
     }
   },
   "pattern": [
-    "##",
-    "#S",
-    " S"
+    "# #",
+    "###",
+    "###"
   ],
   "result": {
     "item": "oresandtools:copper_chestplate"

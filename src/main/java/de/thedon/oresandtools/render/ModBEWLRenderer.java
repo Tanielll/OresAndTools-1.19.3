@@ -58,10 +58,10 @@ public class ModBEWLRenderer extends BlockEntityWithoutLevelRenderer {
     @Override
     @ParametersAreNonnullByDefault
     public void renderByItem(ItemStack pStack, ItemTransforms.TransformType pTransformType, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
-        OresAndToolsMod.LOGGER.debug(NO_PATTERN_OBSIDIAN_SHIELD.toString());
-        OresAndToolsMod.LOGGER.debug(NO_PATTERN_SHIELD.toString());
-        OresAndToolsMod.LOGGER.debug(OBSIDIAN_SHIELD_BASE.toString());
-        OresAndToolsMod.LOGGER.debug(SHIELD_BASE.toString());
+//        OresAndToolsMod.LOGGER.debug(NO_PATTERN_OBSIDIAN_SHIELD.toString());
+//        OresAndToolsMod.LOGGER.debug(NO_PATTERN_SHIELD.toString());
+//        OresAndToolsMod.LOGGER.debug(OBSIDIAN_SHIELD_BASE.toString());
+//        OresAndToolsMod.LOGGER.debug(SHIELD_BASE.toString());
         if (pStack.is(ModItems.OBSIDIAN_SHIELD.get())) {
             boolean flag = BlockItem.getBlockEntityData(pStack) != null;
             pPoseStack.pushPose();

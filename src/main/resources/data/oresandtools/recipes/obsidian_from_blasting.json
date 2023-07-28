@@ -1,9 +1,0 @@
-{
-  "type": "minecraft:blasting",
-  "ingredient": {
-    "item": "oresandtools:obsidian_ore"
-  },
-  "result": "minecraft:obsidian",
-  "experience": 3.0,
-  "cookingtime": 300
-}

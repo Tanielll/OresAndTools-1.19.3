@@ -19,17 +19,22 @@ public class ModBlockStateProvider extends BlockStateProvider {
         /* NORMAL BLOCKS */
         blockWithItem(ModBlocks.HARDENED_DIAMOND_BLOCK);
         blockWithItem(ModBlocks.STEEL_BLOCK);
-
         /* ORES */
+        blockWithItem(ModBlocks.DEEPSLATE_VALYRIAN_ORE);
+        blockWithItem(ModBlocks.VALYRIAN_ORE);
+        blockWithItem(ModBlocks.DEEPSLATE_OBSIDIAN_ORE);
+        blockWithItem(ModBlocks.OBSIDIAN_ORE);
+        blockWithItem(ModBlocks.DEEPSLATE_XP_ORE);
+        blockWithItem(ModBlocks.XP_ORE);
         blockWithItem(ModBlocks.DEEPSLATE_URANIUM_ORE);
         blockWithItem(ModBlocks.URANIUM_ORE);
-        blockWithItem(ModBlocks.DEEPSLATE_URANIUM_ORE);
-        blockWithItem(ModBlocks.URANIUM_ORE);
-        blockWithItem(ModBlocks.DEEPSLATE_URANIUM_ORE);
-        blockWithItem(ModBlocks.URANIUM_ORE);
-        blockWithItem(ModBlocks.DEEPSLATE_URANIUM_ORE);
-        blockWithItem(ModBlocks.URANIUM_ORE);
-
+        /* MOLTEN BLOCKS */
+        blockWithItem(ModBlocks.MOLTEN_COPPER_ORE);
+        blockWithItem(ModBlocks.MOLTEN_IRON_ORE);
+        blockWithItem(ModBlocks.MOLTEN_GOLD_ORE);
+        blockWithItem(ModBlocks.MOLTEN_URANIUM_ORE);
+        blockWithItem(ModBlocks.MOLTEN_STONE);
+        blockWithItem(ModBlocks.MOLTEN_SAND);
     }
 
     private void blockWithItem(RegistryObject<Block> blockRegistryObject) {

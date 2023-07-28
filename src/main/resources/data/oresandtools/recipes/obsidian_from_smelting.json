@@ -1,9 +1,0 @@
-{
-  "type": "minecraft:smelting",
-  "ingredient": {
-    "item": "oresandtools:obsidian_ore"
-  },
-  "result": "minecraft:obsidian",
-  "experience": 5.0,
-  "cookingtime": 500
-}
