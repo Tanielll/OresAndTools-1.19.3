@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "minecraft:stone_from_smelting_xp_ore"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_xp_ore": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "oresandtools:xp_ore"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_xp_ore",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "minecraft:stone_from_smelting_xp_ore"
+    ]
+  }
+}

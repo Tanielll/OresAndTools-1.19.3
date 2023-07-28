@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "minecraft:water_bucket"
+    },
+    "C": {
+      "item": "minecraft:coal"
+    },
+    "U": {
+      "item": "oresandtools:uranium_ingot"
+    }
+  },
+  "pattern": [
+    "C",
+    "U",
+    "B"
+  ],
+  "result": {
+    "item": "oresandtools:improvised_reactor"
+  }
+}
