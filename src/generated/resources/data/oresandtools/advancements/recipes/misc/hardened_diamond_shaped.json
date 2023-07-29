@@ -1,12 +1,13 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_raw_uranium": {
+    "has_hardened_dia_ingredients": {
       "conditions": {
         "items": [
           {
             "items": [
-              "oresandtools:raw_uranium"
+              "minecraft:obsidian",
+              "minecraft:diamond"
             ]
           }
         ]
@@ -15,20 +16,20 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:uranium_ingot_from_blasting_raw_uranium"
+        "recipe": "oresandtools:hardened_diamond_shaped"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
   },
   "requirements": [
     [
-      "has_raw_uranium",
+      "has_hardened_dia_ingredients",
       "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
-      "minecraft:uranium_ingot_from_blasting_raw_uranium"
+      "oresandtools:hardened_diamond_shaped"
     ]
   }
 }

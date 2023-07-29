@@ -1,12 +1,12 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_steel_chunk": {
+    "has_deepslate_uranium_ore": {
       "conditions": {
         "items": [
           {
             "items": [
-              "oresandtools:steel_chunk"
+              "oresandtools:deepslate_uranium_ore"
             ]
           }
         ]
@@ -15,20 +15,20 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:steel_ingot_from_blasting_steel_chunk"
+        "recipe": "oresandtools:uranium_ingot_from_smelting_deepslate_uranium_ore"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
   },
   "requirements": [
     [
-      "has_steel_chunk",
+      "has_deepslate_uranium_ore",
       "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
-      "minecraft:steel_ingot_from_blasting_steel_chunk"
+      "oresandtools:uranium_ingot_from_smelting_deepslate_uranium_ore"
     ]
   }
 }

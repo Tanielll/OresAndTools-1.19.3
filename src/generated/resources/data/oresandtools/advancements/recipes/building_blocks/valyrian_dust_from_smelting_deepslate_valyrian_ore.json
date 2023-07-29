@@ -1,12 +1,12 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_deepslate_xp_ore": {
+    "has_deepslate_valyrian_ore": {
       "conditions": {
         "items": [
           {
             "items": [
-              "oresandtools:deepslate_xp_ore"
+              "oresandtools:deepslate_valyrian_ore"
             ]
           }
         ]
@@ -15,20 +15,20 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:stone_from_blasting_deepslate_xp_ore"
+        "recipe": "oresandtools:valyrian_dust_from_smelting_deepslate_valyrian_ore"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
   },
   "requirements": [
     [
-      "has_deepslate_xp_ore",
+      "has_deepslate_valyrian_ore",
       "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
-      "minecraft:stone_from_blasting_deepslate_xp_ore"
+      "oresandtools:valyrian_dust_from_smelting_deepslate_valyrian_ore"
     ]
   }
 }

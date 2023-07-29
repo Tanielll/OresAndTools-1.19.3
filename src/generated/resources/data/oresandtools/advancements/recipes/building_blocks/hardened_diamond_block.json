@@ -1,34 +1,34 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_the_recipe": {
-      "conditions": {
-        "recipe": "minecraft:valyrian_dust_from_smelting_valyrian_ore"
-      },
-      "trigger": "minecraft:recipe_unlocked"
-    },
-    "has_valyrian_ore": {
+    "has_hardened_diamond": {
       "conditions": {
         "items": [
           {
             "items": [
-              "oresandtools:valyrian_ore"
+              "oresandtools:hardened_diamond"
             ]
           }
         ]
       },
       "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "oresandtools:hardened_diamond_block"
+      },
+      "trigger": "minecraft:recipe_unlocked"
     }
   },
   "requirements": [
     [
-      "has_valyrian_ore",
+      "has_hardened_diamond",
       "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
-      "minecraft:valyrian_dust_from_smelting_valyrian_ore"
+      "oresandtools:hardened_diamond_block"
     ]
   }
 }

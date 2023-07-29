@@ -1,13 +1,12 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_hardened_dia_ingredients": {
+    "has_hardened_diamond_block": {
       "conditions": {
         "items": [
           {
             "items": [
-              "minecraft:obsidian",
-              "minecraft:diamond"
+              "oresandtools:hardened_diamond_block"
             ]
           }
         ]
@@ -23,7 +22,7 @@
   },
   "requirements": [
     [
-      "has_hardened_dia_ingredients",
+      "has_hardened_diamond_block",
       "has_the_recipe"
     ]
   ],

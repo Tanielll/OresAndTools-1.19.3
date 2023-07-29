@@ -3,16 +3,16 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:uranium_ingot_from_blasting_uranium_ore"
+        "recipe": "oresandtools:stone_from_smelting_xp_ore"
       },
       "trigger": "minecraft:recipe_unlocked"
     },
-    "has_uranium_ore": {
+    "has_xp_ore": {
       "conditions": {
         "items": [
           {
             "items": [
-              "oresandtools:uranium_ore"
+              "oresandtools:xp_ore"
             ]
           }
         ]
@@ -22,13 +22,13 @@
   },
   "requirements": [
     [
-      "has_uranium_ore",
+      "has_xp_ore",
       "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
-      "minecraft:uranium_ingot_from_blasting_uranium_ore"
+      "oresandtools:stone_from_smelting_xp_ore"
     ]
   }
 }

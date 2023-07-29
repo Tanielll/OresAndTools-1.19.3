@@ -1,12 +1,12 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_steel_ingot": {
+    "has_obsidian_ore": {
       "conditions": {
         "items": [
           {
             "items": [
-              "oresandtools:steel_ingot"
+              "oresandtools:obsidian_ore"
             ]
           }
         ]
@@ -15,20 +15,20 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:steel_block"
+        "recipe": "oresandtools:obsidian_from_smelting_obsidian_ore"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
   },
   "requirements": [
     [
-      "has_steel_ingot",
+      "has_obsidian_ore",
       "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
-      "minecraft:steel_block"
+      "oresandtools:obsidian_from_smelting_obsidian_ore"
     ]
   }
 }

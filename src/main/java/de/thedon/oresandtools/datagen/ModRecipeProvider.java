@@ -9,12 +9,15 @@ import net.minecraft.data.recipes.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.crafting.conditions.IConditionBuilder;
 import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
@@ -45,7 +48,8 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .pattern("ODO")
                 .unlockedBy("has_hardened_dia_ingredients", inventoryTrigger(ItemPredicate.Builder.item()
                         .of(Blocks.OBSIDIAN, Items.DIAMOND).build()))
-                .save(pWriter);
+                .save(pWriter, new ResourceLocation(OresAndToolsMod.MOD_ID,
+                        getItemName(ModItems.HARDENED_DIAMOND.get()) + "_shaped"));
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.IMPROVISED_REACTOR.get())
                 .define('C', Ingredient.of(Items.COAL))
                 .define('U', ModItems.URANIUM_INGOT.get())
@@ -202,21 +206,64 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 ModItems.VALYRIAN_BOOTS.get());
     }
 
-    protected static void toolSetRecipes(Consumer<FinishedRecipe> pWriter, Item pMaterial,
-                                         ItemLike pAxe, ItemLike pHoe, ItemLike pPickaxe, ItemLike pShovel, ItemLike pSword) {
-        axeBuilder(pAxe, pMaterial).save(pWriter);
-        hoeBuilder(pHoe, pMaterial).save(pWriter);
-        pickaxeBuilder(pPickaxe, pMaterial).save(pWriter);
-        shovelBuilder(pShovel, pMaterial).save(pWriter);
-        swordBuilder(pSword, pMaterial).save(pWriter);
+    protected static void nineBlockStorageRecipes(Consumer<FinishedRecipe> pConsumer, RecipeCategory pUnpackedCategory, ItemLike pUnpacked, RecipeCategory pPackedCategory, ItemLike pPacked) {
+        nineBlockStorageRecipes(pConsumer, pUnpackedCategory, pUnpacked, pPackedCategory,
+                pPacked, getSimpleRecipeName(pPacked), (String)null, getSimpleRecipeName(pUnpacked), (String)null);
     }
 
-    protected static void armorSetRecipes(Consumer<FinishedRecipe> pWriter, Item pMaterial,
+    protected static void nineBlockStorageRecipes(Consumer<FinishedRecipe> pConsumer, RecipeCategory pUnpackedCategory, ItemLike pUnpacked, RecipeCategory pPackedCategory, ItemLike pPacked, String pPackedName, @Nullable String pPackedGroup, String pUnpackedName, @Nullable String pUnpackedGroup) {
+        ShapelessRecipeBuilder.shapeless(pUnpackedCategory, pUnpacked, 9)
+                .requires(pPacked)
+                .group(pUnpackedGroup)
+                .unlockedBy(getHasName(pPacked), has(pPacked))
+                .save(pConsumer, new ResourceLocation(OresAndToolsMod.MOD_ID, pUnpackedName));
+        ShapedRecipeBuilder.shaped(pPackedCategory, pPacked)
+                .define('#', pUnpacked)
+                .pattern("###")
+                .pattern("###")
+                .pattern("###")
+                .group(pPackedGroup)
+                .unlockedBy(getHasName(pUnpacked), has(pUnpacked))
+                .save(pConsumer, new ResourceLocation(OresAndToolsMod.MOD_ID, pPackedName));
+    }
+
+    protected static void oreSmelting(Consumer<FinishedRecipe> pConsumer, List<ItemLike> pIngredients, RecipeCategory pCategory, ItemLike pResult, float pExperience, int pCookingTIme, String pGroup) {
+        oreCooking(pConsumer, RecipeSerializer.SMELTING_RECIPE, pIngredients, pCategory,
+                pResult, pExperience, pCookingTIme, pGroup, "_from_smelting");
+    }
+
+    protected static void oreBlasting(Consumer<FinishedRecipe> pConsumer, List<ItemLike> pIngredients, RecipeCategory pCategory, ItemLike pResult, float pExperience, int pCookingTime, String pGroup) {
+        oreCooking(pConsumer, RecipeSerializer.BLASTING_RECIPE, pIngredients, pCategory,
+                pResult, pExperience, pCookingTime, pGroup, "_from_blasting");
+    }
+
+    protected static void oreCooking(Consumer<FinishedRecipe> pConsumer, RecipeSerializer<? extends AbstractCookingRecipe> pCookingSerializer, List<ItemLike> pIngredients, RecipeCategory pCategory, ItemLike pResult, float pExperience, int pCookingTime, String pGroup, String pRecipeName) {
+        for(ItemLike itemlike : pIngredients) {
+            SimpleCookingRecipeBuilder.generic(
+                    Ingredient.of(itemlike), pCategory, pResult, pExperience, pCookingTime, pCookingSerializer)
+                    .group(pGroup)
+                    .unlockedBy(getHasName(itemlike), has(itemlike))
+                    .save(pConsumer, new ResourceLocation(
+                            OresAndToolsMod.MOD_ID,
+                            getItemName(pResult) + pRecipeName + "_" + getItemName(itemlike)));
+        }
+    }
+
+    protected static void toolSetRecipes(Consumer<FinishedRecipe> pConsumer, Item pMaterial,
+                                         ItemLike pAxe, ItemLike pHoe, ItemLike pPickaxe, ItemLike pShovel, ItemLike pSword) {
+        axeBuilder(pAxe, pMaterial).save(pConsumer);
+        hoeBuilder(pHoe, pMaterial).save(pConsumer);
+        pickaxeBuilder(pPickaxe, pMaterial).save(pConsumer);
+        shovelBuilder(pShovel, pMaterial).save(pConsumer);
+        swordBuilder(pSword, pMaterial).save(pConsumer);
+    }
+
+    protected static void armorSetRecipes(Consumer<FinishedRecipe> pConsumer, Item pMaterial,
                                          ItemLike pHelmet, ItemLike pChestplate, ItemLike pLeggings, ItemLike pBoots) {
-        helmetBuilder(pHelmet, pMaterial).save(pWriter);
-        chestplateBuilder(pChestplate, pMaterial).save(pWriter);
-        leggingsBuilder(pLeggings, pMaterial).save(pWriter);
-        bootsBuilder(pBoots, pMaterial).save(pWriter);
+        helmetBuilder(pHelmet, pMaterial).save(pConsumer);
+        chestplateBuilder(pChestplate, pMaterial).save(pConsumer);
+        leggingsBuilder(pLeggings, pMaterial).save(pConsumer);
+        bootsBuilder(pBoots, pMaterial).save(pConsumer);
     }
 
     protected static RecipeBuilder axeBuilder(ItemLike pAxe, Item pMaterial) {
@@ -226,7 +273,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .pattern("##")
                 .pattern("#S")
                 .pattern(" S")
-                .unlockedBy("has_" + pMaterial.getDescriptionId(),
+                .unlockedBy("has_" + getItemName(pMaterial),
                         inventoryTrigger(ItemPredicate.Builder.item().of(pMaterial).build()));
     }
 
@@ -237,7 +284,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .pattern("##")
                 .pattern(" S")
                 .pattern(" S")
-                .unlockedBy("has_" + pMaterial.getDescriptionId(),
+                .unlockedBy("has_" + getItemName(pMaterial),
                         inventoryTrigger(ItemPredicate.Builder.item().of(pMaterial).build()));
     }
 
@@ -248,7 +295,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .pattern("###")
                 .pattern(" S ")
                 .pattern(" S ")
-                .unlockedBy("has_" + pMaterial.getDescriptionId(),
+                .unlockedBy("has_" + getItemName(pMaterial),
                         inventoryTrigger(ItemPredicate.Builder.item().of(pMaterial).build()));
     }
 
@@ -259,7 +306,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .pattern("#")
                 .pattern("S")
                 .pattern("S")
-                .unlockedBy("has_" + pMaterial.getDescriptionId(),
+                .unlockedBy("has_" + getItemName(pMaterial),
                         inventoryTrigger(ItemPredicate.Builder.item().of(pMaterial).build()));
     }
 
@@ -270,7 +317,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .pattern("#")
                 .pattern("#")
                 .pattern("S")
-                .unlockedBy("has_" + pMaterial.getDescriptionId(),
+                .unlockedBy("has_" + getItemName(pMaterial),
                         inventoryTrigger(ItemPredicate.Builder.item().of(pMaterial).build()));
     }
 
@@ -279,7 +326,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .define('#', pMaterial)
                 .pattern("###")
                 .pattern("# #")
-                .unlockedBy("has_" + pMaterial.getDescriptionId(),
+                .unlockedBy("has_" + getItemName(pMaterial),
                         inventoryTrigger(ItemPredicate.Builder.item().of(pMaterial).build()));
     }
 
@@ -289,7 +336,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .pattern("# #")
                 .pattern("###")
                 .pattern("###")
-                .unlockedBy("has_" + pMaterial.getDescriptionId(),
+                .unlockedBy("has_" + getItemName(pMaterial),
                         inventoryTrigger(ItemPredicate.Builder.item().of(pMaterial).build()));
     }
 
@@ -299,7 +346,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .pattern("###")
                 .pattern("# #")
                 .pattern("# #")
-                .unlockedBy("has_" + pMaterial.getDescriptionId(),
+                .unlockedBy("has_" + getItemName(pMaterial),
                         inventoryTrigger(ItemPredicate.Builder.item().of(pMaterial).build()));
     }
 
@@ -308,7 +355,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .define('#', pMaterial)
                 .pattern("# #")
                 .pattern("# #")
-                .unlockedBy("has_" + pMaterial.getDescriptionId(),
+                .unlockedBy("has_" + getItemName(pMaterial),
                         inventoryTrigger(ItemPredicate.Builder.item().of(pMaterial).build()));
     }
 }

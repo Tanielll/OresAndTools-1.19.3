@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:uranium_ingot_from_smelting_deepslate_uranium_ore"
+        "recipe": "oresandtools:uranium_ingot_from_blasting_deepslate_uranium_ore"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -28,7 +28,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:uranium_ingot_from_smelting_deepslate_uranium_ore"
+      "oresandtools:uranium_ingot_from_blasting_deepslate_uranium_ore"
     ]
   }
 }

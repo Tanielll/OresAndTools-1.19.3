@@ -1,12 +1,12 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_obsidian_ore": {
+    "has_steel_chunk": {
       "conditions": {
         "items": [
           {
             "items": [
-              "oresandtools:obsidian_ore"
+              "oresandtools:steel_chunk"
             ]
           }
         ]
@@ -15,20 +15,20 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:obsidian_from_blasting_obsidian_ore"
+        "recipe": "oresandtools:steel_ingot_from_blasting_steel_chunk"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
   },
   "requirements": [
     [
-      "has_obsidian_ore",
+      "has_steel_chunk",
       "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
-      "minecraft:obsidian_from_blasting_obsidian_ore"
+      "oresandtools:steel_ingot_from_blasting_steel_chunk"
     ]
   }
 }

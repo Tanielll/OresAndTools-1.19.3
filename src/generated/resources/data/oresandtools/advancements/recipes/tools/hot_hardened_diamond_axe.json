@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_item.oresandtools.hot_hardened_diamond": {
+    "has_hot_hardened_diamond": {
       "conditions": {
         "items": [
           {
@@ -22,7 +22,7 @@
   },
   "requirements": [
     [
-      "has_item.oresandtools.hot_hardened_diamond",
+      "has_hot_hardened_diamond",
       "has_the_recipe"
     ]
   ],

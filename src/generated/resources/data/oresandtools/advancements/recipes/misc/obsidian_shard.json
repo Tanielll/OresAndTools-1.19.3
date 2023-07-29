@@ -1,12 +1,12 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_obsidian_ore": {
+    "has_obsidian": {
       "conditions": {
         "items": [
           {
             "items": [
-              "oresandtools:obsidian_ore"
+              "minecraft:obsidian"
             ]
           }
         ]
@@ -15,20 +15,20 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:obsidian_from_smelting_obsidian_ore"
+        "recipe": "oresandtools:obsidian_shard"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
   },
   "requirements": [
     [
-      "has_obsidian_ore",
+      "has_obsidian",
       "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
-      "minecraft:obsidian_from_smelting_obsidian_ore"
+      "oresandtools:obsidian_shard"
     ]
   }
 }

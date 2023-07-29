@@ -1,12 +1,12 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_hardened_diamond_block": {
+    "has_deepslate_xp_ore": {
       "conditions": {
         "items": [
           {
             "items": [
-              "oresandtools:hardened_diamond_block"
+              "oresandtools:deepslate_xp_ore"
             ]
           }
         ]
@@ -15,20 +15,20 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:hardened_diamond"
+        "recipe": "oresandtools:stone_from_blasting_deepslate_xp_ore"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
   },
   "requirements": [
     [
-      "has_hardened_diamond_block",
+      "has_deepslate_xp_ore",
       "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
-      "minecraft:hardened_diamond"
+      "oresandtools:stone_from_blasting_deepslate_xp_ore"
     ]
   }
 }

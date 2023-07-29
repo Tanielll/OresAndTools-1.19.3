@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:valyrian_dust_from_blasting_valyrian_ore"
+        "recipe": "oresandtools:valyrian_dust_from_smelting_valyrian_ore"
       },
       "trigger": "minecraft:recipe_unlocked"
     },
@@ -28,7 +28,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:valyrian_dust_from_blasting_valyrian_ore"
+      "oresandtools:valyrian_dust_from_smelting_valyrian_ore"
     ]
   }
 }

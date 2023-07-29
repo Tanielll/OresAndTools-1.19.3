@@ -1,20 +1,13 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "minecraft:crafting_shapeless",
   "category": "misc",
-  "key": {
-    "D": {
-      "item": "minecraft:diamond"
-    },
-    "O": {
-      "item": "minecraft:obsidian"
+  "ingredients": [
+    {
+      "item": "oresandtools:hardened_diamond_block"
     }
-  },
-  "pattern": [
-    "ODO",
-    "DOD",
-    "ODO"
   ],
   "result": {
+    "count": 9,
     "item": "oresandtools:hardened_diamond"
   }
 }
