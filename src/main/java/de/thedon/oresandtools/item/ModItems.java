@@ -1,6 +1,7 @@
 package de.thedon.oresandtools.item;
 
 import de.thedon.oresandtools.OresAndToolsMod;
+import net.minecraft.Util;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -14,6 +15,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.EnumMap;
 import java.util.List;
 
 public class ModItems {
@@ -72,34 +74,34 @@ public class ModItems {
     public static final RegistryObject<Item> OBSIDIAN_SWORD = ITEMS.register("obsidian_sword", () -> new SwordItem(ModTiers.OBSIDIAN, 3, -2.4f, new Item.Properties().fireResistant()));
 
     /* ARMOR */
-    public static final RegistryObject<Item> COPPER_HELMET = ITEMS.register("copper_helmet", () -> new ArmorItem(ModArmorMaterials.COPPER, EquipmentSlot.HEAD, new Item.Properties()));
-    public static final RegistryObject<Item> COPPER_CHESTPLATE = ITEMS.register("copper_chestplate", () -> new ArmorItem(ModArmorMaterials.COPPER, EquipmentSlot.CHEST, new Item.Properties()));
-    public static final RegistryObject<Item> COPPER_LEGGINGS = ITEMS.register("copper_leggings", () -> new ArmorItem(ModArmorMaterials.COPPER, EquipmentSlot.LEGS, new Item.Properties()));
-    public static final RegistryObject<Item> COPPER_BOOTS = ITEMS.register("copper_boots", () -> new ArmorItem(ModArmorMaterials.COPPER, EquipmentSlot.FEET, new Item.Properties()));
-    public static final RegistryObject<Item> STEEL_HELMET = ITEMS.register("steel_helmet", () -> new ArmorItem(ModArmorMaterials.STEEL, EquipmentSlot.HEAD, new Item.Properties()));
-    public static final RegistryObject<Item> STEEL_CHESTPLATE = ITEMS.register("steel_chestplate", () -> new ArmorItem(ModArmorMaterials.STEEL, EquipmentSlot.CHEST, new Item.Properties()));
-    public static final RegistryObject<Item> STEEL_LEGGINGS = ITEMS.register("steel_leggings", () -> new ArmorItem(ModArmorMaterials.STEEL, EquipmentSlot.LEGS, new Item.Properties()));
-    public static final RegistryObject<Item> STEEL_BOOTS = ITEMS.register("steel_boots", () -> new ArmorItem(ModArmorMaterials.STEEL, EquipmentSlot.FEET, new Item.Properties()));
-    public static final RegistryObject<Item> VALYRIAN_HELMET = ITEMS.register("valyrian_helmet", () -> new ModArmorItem(ModArmorMaterials.VALYRIAN, EquipmentSlot.HEAD, new Item.Properties().fireResistant(), true));
-    public static final RegistryObject<Item> VALYRIAN_CHESTPLATE = ITEMS.register("valyrian_chestplate", () -> new ModArmorItem(ModArmorMaterials.VALYRIAN, EquipmentSlot.CHEST, new Item.Properties().fireResistant(), true));
-    public static final RegistryObject<Item> VALYRIAN_LEGGINGS = ITEMS.register("valyrian_leggings", () -> new ModArmorItem(ModArmorMaterials.VALYRIAN, EquipmentSlot.LEGS, new Item.Properties().fireResistant(), true));
-    public static final RegistryObject<Item> VALYRIAN_BOOTS = ITEMS.register("valyrian_boots", () -> new ModArmorItem(ModArmorMaterials.VALYRIAN, EquipmentSlot.FEET, new Item.Properties().fireResistant(), true));
-    public static final RegistryObject<Item> HARDENED_DIAMOND_HELMET = ITEMS.register("hardened_diamond_helmet", () -> new ArmorItem(ModArmorMaterials.H_DIAMOND, EquipmentSlot.HEAD, new Item.Properties().fireResistant()));
-    public static final RegistryObject<Item> HARDENED_DIAMOND_CHESTPLATE = ITEMS.register("hardened_diamond_chestplate", () -> new ArmorItem(ModArmorMaterials.H_DIAMOND, EquipmentSlot.CHEST, new Item.Properties().fireResistant()));
-    public static final RegistryObject<Item> HARDENED_DIAMOND_LEGGINGS = ITEMS.register("hardened_diamond_leggings", () -> new ArmorItem(ModArmorMaterials.H_DIAMOND, EquipmentSlot.LEGS, new Item.Properties().fireResistant()));
-    public static final RegistryObject<Item> HARDENED_DIAMOND_BOOTS = ITEMS.register("hardened_diamond_boots", () -> new ArmorItem(ModArmorMaterials.H_DIAMOND, EquipmentSlot.FEET, new Item.Properties().fireResistant()));
-    public static final RegistryObject<Item> HOT_HARDENED_DIAMOND_HELMET = ITEMS.register("hot_hardened_diamond_helmet", () -> new ModArmorItem(ModArmorMaterials.HOT_H_DIAMOND, EquipmentSlot.HEAD, new Item.Properties().fireResistant(), true));
-    public static final RegistryObject<Item> HOT_HARDENED_DIAMOND_CHESTPLATE = ITEMS.register("hot_hardened_diamond_chestplate", () -> new ModArmorItem(ModArmorMaterials.HOT_H_DIAMOND, EquipmentSlot.CHEST, new Item.Properties().fireResistant(), true));
-    public static final RegistryObject<Item> HOT_HARDENED_DIAMOND_LEGGINGS = ITEMS.register("hot_hardened_diamond_leggings", () -> new ModArmorItem(ModArmorMaterials.HOT_H_DIAMOND, EquipmentSlot.LEGS, new Item.Properties().fireResistant(), true));
-    public static final RegistryObject<Item> HOT_HARDENED_DIAMOND_BOOTS = ITEMS.register("hot_hardened_diamond_boots", () -> new ModArmorItem(ModArmorMaterials.HOT_H_DIAMOND, EquipmentSlot.FEET, new Item.Properties().fireResistant(), true));
-    public static final RegistryObject<Item> EMERALD_HELMET = ITEMS.register("emerald_helmet", () -> new ArmorItem(ModArmorMaterials.EMERALD, EquipmentSlot.HEAD, new Item.Properties()));
-    public static final RegistryObject<Item> EMERALD_CHESTPLATE = ITEMS.register("emerald_chestplate", () -> new ArmorItem(ModArmorMaterials.EMERALD, EquipmentSlot.CHEST, new Item.Properties()));
-    public static final RegistryObject<Item> EMERALD_LEGGINGS = ITEMS.register("emerald_leggings", () -> new ArmorItem(ModArmorMaterials.EMERALD, EquipmentSlot.LEGS, new Item.Properties()));
-    public static final RegistryObject<Item> EMERALD_BOOTS = ITEMS.register("emerald_boots", () -> new ArmorItem(ModArmorMaterials.EMERALD, EquipmentSlot.FEET, new Item.Properties()));
-    public static final RegistryObject<Item> OBSIDIAN_HELMET = ITEMS.register("obsidian_helmet", () -> new ArmorItem(ModArmorMaterials.OBSIDIAN, EquipmentSlot.HEAD, new Item.Properties().fireResistant()));
-    public static final RegistryObject<Item> OBSIDIAN_CHESTPLATE = ITEMS.register("obsidian_chestplate", () -> new ArmorItem(ModArmorMaterials.OBSIDIAN, EquipmentSlot.CHEST, new Item.Properties().fireResistant()));
-    public static final RegistryObject<Item> OBSIDIAN_LEGGINGS = ITEMS.register("obsidian_leggings", () -> new ArmorItem(ModArmorMaterials.OBSIDIAN, EquipmentSlot.LEGS, new Item.Properties().fireResistant()));
-    public static final RegistryObject<Item> OBSIDIAN_BOOTS = ITEMS.register("obsidian_boots", () -> new ArmorItem(ModArmorMaterials.OBSIDIAN, EquipmentSlot.FEET, new Item.Properties().fireResistant()));
+    public static final RegistryObject<Item> COPPER_HELMET = ITEMS.register("copper_helmet", () -> new ArmorItem(ModArmorMaterials.COPPER, ArmorItem.Type.HELMET, new Item.Properties()));
+    public static final RegistryObject<Item> COPPER_CHESTPLATE = ITEMS.register("copper_chestplate", () -> new ArmorItem(ModArmorMaterials.COPPER, ArmorItem.Type.CHESTPLATE, new Item.Properties()));
+    public static final RegistryObject<Item> COPPER_LEGGINGS = ITEMS.register("copper_leggings", () -> new ArmorItem(ModArmorMaterials.COPPER, ArmorItem.Type.LEGGINGS, new Item.Properties()));
+    public static final RegistryObject<Item> COPPER_BOOTS = ITEMS.register("copper_boots", () -> new ArmorItem(ModArmorMaterials.COPPER, ArmorItem.Type.BOOTS, new Item.Properties()));
+    public static final RegistryObject<Item> STEEL_HELMET = ITEMS.register("steel_helmet", () -> new ArmorItem(ModArmorMaterials.STEEL, ArmorItem.Type.HELMET, new Item.Properties()));
+    public static final RegistryObject<Item> STEEL_CHESTPLATE = ITEMS.register("steel_chestplate", () -> new ArmorItem(ModArmorMaterials.STEEL, ArmorItem.Type.CHESTPLATE, new Item.Properties()));
+    public static final RegistryObject<Item> STEEL_LEGGINGS = ITEMS.register("steel_leggings", () -> new ArmorItem(ModArmorMaterials.STEEL, ArmorItem.Type.LEGGINGS, new Item.Properties()));
+    public static final RegistryObject<Item> STEEL_BOOTS = ITEMS.register("steel_boots", () -> new ArmorItem(ModArmorMaterials.STEEL, ArmorItem.Type.BOOTS, new Item.Properties()));
+    public static final RegistryObject<Item> VALYRIAN_HELMET = ITEMS.register("valyrian_helmet", () -> new ModArmorItem(ModArmorMaterials.VALYRIAN, ArmorItem.Type.HELMET, new Item.Properties().fireResistant(), true));
+    public static final RegistryObject<Item> VALYRIAN_CHESTPLATE = ITEMS.register("valyrian_chestplate", () -> new ModArmorItem(ModArmorMaterials.VALYRIAN, ArmorItem.Type.CHESTPLATE, new Item.Properties().fireResistant(), true));
+    public static final RegistryObject<Item> VALYRIAN_LEGGINGS = ITEMS.register("valyrian_leggings", () -> new ModArmorItem(ModArmorMaterials.VALYRIAN, ArmorItem.Type.LEGGINGS, new Item.Properties().fireResistant(), true));
+    public static final RegistryObject<Item> VALYRIAN_BOOTS = ITEMS.register("valyrian_boots", () -> new ModArmorItem(ModArmorMaterials.VALYRIAN, ArmorItem.Type.BOOTS, new Item.Properties().fireResistant(), true));
+    public static final RegistryObject<Item> HARDENED_DIAMOND_HELMET = ITEMS.register("hardened_diamond_helmet", () -> new ArmorItem(ModArmorMaterials.H_DIAMOND, ArmorItem.Type.HELMET, new Item.Properties().fireResistant()));
+    public static final RegistryObject<Item> HARDENED_DIAMOND_CHESTPLATE = ITEMS.register("hardened_diamond_chestplate", () -> new ArmorItem(ModArmorMaterials.H_DIAMOND, ArmorItem.Type.CHESTPLATE, new Item.Properties().fireResistant()));
+    public static final RegistryObject<Item> HARDENED_DIAMOND_LEGGINGS = ITEMS.register("hardened_diamond_leggings", () -> new ArmorItem(ModArmorMaterials.H_DIAMOND, ArmorItem.Type.LEGGINGS, new Item.Properties().fireResistant()));
+    public static final RegistryObject<Item> HARDENED_DIAMOND_BOOTS = ITEMS.register("hardened_diamond_boots", () -> new ArmorItem(ModArmorMaterials.H_DIAMOND, ArmorItem.Type.BOOTS, new Item.Properties().fireResistant()));
+    public static final RegistryObject<Item> HOT_HARDENED_DIAMOND_HELMET = ITEMS.register("hot_hardened_diamond_helmet", () -> new ModArmorItem(ModArmorMaterials.HOT_H_DIAMOND, ArmorItem.Type.HELMET, new Item.Properties().fireResistant(), true));
+    public static final RegistryObject<Item> HOT_HARDENED_DIAMOND_CHESTPLATE = ITEMS.register("hot_hardened_diamond_chestplate", () -> new ModArmorItem(ModArmorMaterials.HOT_H_DIAMOND, ArmorItem.Type.CHESTPLATE, new Item.Properties().fireResistant(), true));
+    public static final RegistryObject<Item> HOT_HARDENED_DIAMOND_LEGGINGS = ITEMS.register("hot_hardened_diamond_leggings", () -> new ModArmorItem(ModArmorMaterials.HOT_H_DIAMOND, ArmorItem.Type.LEGGINGS, new Item.Properties().fireResistant(), true));
+    public static final RegistryObject<Item> HOT_HARDENED_DIAMOND_BOOTS = ITEMS.register("hot_hardened_diamond_boots", () -> new ModArmorItem(ModArmorMaterials.HOT_H_DIAMOND, ArmorItem.Type.BOOTS, new Item.Properties().fireResistant(), true));
+    public static final RegistryObject<Item> EMERALD_HELMET = ITEMS.register("emerald_helmet", () -> new ArmorItem(ModArmorMaterials.EMERALD, ArmorItem.Type.HELMET, new Item.Properties()));
+    public static final RegistryObject<Item> EMERALD_CHESTPLATE = ITEMS.register("emerald_chestplate", () -> new ArmorItem(ModArmorMaterials.EMERALD, ArmorItem.Type.CHESTPLATE, new Item.Properties()));
+    public static final RegistryObject<Item> EMERALD_LEGGINGS = ITEMS.register("emerald_leggings", () -> new ArmorItem(ModArmorMaterials.EMERALD, ArmorItem.Type.LEGGINGS, new Item.Properties()));
+    public static final RegistryObject<Item> EMERALD_BOOTS = ITEMS.register("emerald_boots", () -> new ArmorItem(ModArmorMaterials.EMERALD, ArmorItem.Type.BOOTS, new Item.Properties()));
+    public static final RegistryObject<Item> OBSIDIAN_HELMET = ITEMS.register("obsidian_helmet", () -> new ArmorItem(ModArmorMaterials.OBSIDIAN, ArmorItem.Type.HELMET, new Item.Properties().fireResistant()));
+    public static final RegistryObject<Item> OBSIDIAN_CHESTPLATE = ITEMS.register("obsidian_chestplate", () -> new ArmorItem(ModArmorMaterials.OBSIDIAN, ArmorItem.Type.CHESTPLATE, new Item.Properties().fireResistant()));
+    public static final RegistryObject<Item> OBSIDIAN_LEGGINGS = ITEMS.register("obsidian_leggings", () -> new ArmorItem(ModArmorMaterials.OBSIDIAN, ArmorItem.Type.LEGGINGS, new Item.Properties().fireResistant()));
+    public static final RegistryObject<Item> OBSIDIAN_BOOTS = ITEMS.register("obsidian_boots", () -> new ArmorItem(ModArmorMaterials.OBSIDIAN, ArmorItem.Type.BOOTS, new Item.Properties().fireResistant()));
 
     /* BOWS */
     public static final RegistryObject<Item> VALYRIAN_BOW = ITEMS.register("valyrian_bow", () -> new ModBowItem(VALYRIAN_INGOT.get(), 1.1f, 60000, 20, new Item.Properties().durability(3225)));
@@ -157,28 +159,43 @@ public class ModItems {
     }
 
     public enum ModArmorMaterials implements ArmorMaterial {
-        COPPER("copper", 10, new int[] {1, 3, 4, 2}, 17, SoundEvents.ARMOR_EQUIP_GOLD, 0.0f, 0.0f, Ingredient.of(Items.COPPER_INGOT)),
-        STEEL("steel", 20, new int[] {2, 5, 7, 3}, 9, SoundEvents.ARMOR_EQUIP_IRON, 0.0f, 0.0f, Ingredient.of(ModItems.STEEL_INGOT.get())),
-        VALYRIAN("valyrian", 50, new int[] {4, 7, 10, 4}, 25, SoundEvents.ARMOR_EQUIP_GOLD, 3.0f, 0.0f, Ingredient.of(ModItems.VALYRIAN_INGOT.get())),
-        H_DIAMOND("hardened_diamond", 65, new int[] {3, 6, 8, 3}, 10, SoundEvents.ARMOR_EQUIP_DIAMOND, 2.0f, 0.0f, Ingredient.of(ModItems.HARDENED_DIAMOND.get())),
-        HOT_H_DIAMOND("hot_hardened_diamond", 59, new int[] {3, 6, 8, 3}, 11, SoundEvents.ARMOR_EQUIP_DIAMOND, 2.0f, 0.0f, Ingredient.of(ModItems.HOT_HARDENED_DIAMOND.get())),
-        EMERALD("emerald", 33, new int[] {3, 6, 8, 3}, 14, SoundEvents.ARMOR_EQUIP_DIAMOND, 2.5f, 0.0f, Ingredient.of(Items.EMERALD)),
-        OBSIDIAN("obsidian", 62, new int[] {3, 7, 9, 4}, 9, SoundEvents.ARMOR_EQUIP_NETHERITE, 1.5f, 0.5f, Ingredient.of(Items.OBSIDIAN));
+        COPPER("copper", 10, getProtectionFunctionForType(1, 3, 4, 2), 17, SoundEvents.ARMOR_EQUIP_GOLD, 0.0f, 0.0f, Ingredient.of(Items.COPPER_INGOT)),
+        STEEL("steel", 20, getProtectionFunctionForType(2, 5, 7, 3), 9, SoundEvents.ARMOR_EQUIP_IRON, 0.0f, 0.0f, Ingredient.of(ModItems.STEEL_INGOT.get())),
+        VALYRIAN("valyrian", 50, getProtectionFunctionForType(4, 7, 10, 4), 25, SoundEvents.ARMOR_EQUIP_GOLD, 3.0f, 0.0f, Ingredient.of(ModItems.VALYRIAN_INGOT.get())),
+        H_DIAMOND("hardened_diamond", 65, getProtectionFunctionForType(3, 6, 8, 3), 10, SoundEvents.ARMOR_EQUIP_DIAMOND, 2.0f, 0.0f, Ingredient.of(ModItems.HARDENED_DIAMOND.get())),
+        HOT_H_DIAMOND("hot_hardened_diamond", 59, getProtectionFunctionForType(3, 6, 8, 3), 11, SoundEvents.ARMOR_EQUIP_DIAMOND, 2.0f, 0.0f, Ingredient.of(ModItems.HOT_HARDENED_DIAMOND.get())),
+        EMERALD("emerald", 33, getProtectionFunctionForType(3, 6, 8, 3), 14, SoundEvents.ARMOR_EQUIP_DIAMOND, 2.5f, 0.0f, Ingredient.of(Items.EMERALD)),
+        OBSIDIAN("obsidian", 62, getProtectionFunctionForType(3, 7, 9, 4), 9, SoundEvents.ARMOR_EQUIP_NETHERITE, 1.5f, 0.5f, Ingredient.of(Items.OBSIDIAN));
 
-        private final int[] HEALTH_PER_SLOT = {13, 15, 16, 11};
         private final String name;
         private final int durabilityMultiplier;
-        private final int[] slotProtections;
+        private final EnumMap<ArmorItem.Type, Integer> protectionFunctionForType;
         private final int enchantmentValue;
         private final SoundEvent sound;
         private final float toughness;
         private final float knockbackResistance;
         private final Ingredient repairIngredient;
 
-        ModArmorMaterials(String pName, int pDurabilityMultiplier, int[] pSlotProtections, int pEnchantmentValue, SoundEvent pSound, float pToughness, float pKnockbackResistance, Ingredient pRepairIngredient) {
+        private static final EnumMap<ArmorItem.Type, Integer> HEALTH_FUNCTION_FOR_TYPE = Util.make(new EnumMap<>(ArmorItem.Type.class), (type) -> {
+            type.put(ArmorItem.Type.BOOTS, 13);
+            type.put(ArmorItem.Type.LEGGINGS, 15);
+            type.put(ArmorItem.Type.CHESTPLATE, 16);
+            type.put(ArmorItem.Type.HELMET, 11);
+        });
+
+        private static EnumMap<ArmorItem.Type, Integer> getProtectionFunctionForType(int boots, int leggings, int chestplate, int helmet) {
+            return Util.make(new EnumMap<>(ArmorItem.Type.class), (type) -> {
+                type.put(ArmorItem.Type.BOOTS, boots);
+                type.put(ArmorItem.Type.LEGGINGS, leggings);
+                type.put(ArmorItem.Type.CHESTPLATE, chestplate);
+                type.put(ArmorItem.Type.HELMET, helmet);
+            });
+        }
+
+        ModArmorMaterials(String pName, int pDurabilityMultiplier, EnumMap<ArmorItem.Type, Integer> pProtectionFunctionForType, int pEnchantmentValue, SoundEvent pSound, float pToughness, float pKnockbackResistance, Ingredient pRepairIngredient) {
             this.name = OresAndToolsMod.MOD_ID + ":" + pName;
             this.durabilityMultiplier = pDurabilityMultiplier;
-            this.slotProtections = pSlotProtections;
+            this.protectionFunctionForType = pProtectionFunctionForType;
             this.enchantmentValue = pEnchantmentValue;
             this.sound = pSound;
             this.toughness = pToughness;
@@ -187,13 +204,13 @@ public class ModItems {
         }
 
         @Override
-        public int getDurabilityForSlot(EquipmentSlot pSlot) {
-            return durabilityMultiplier * HEALTH_PER_SLOT[pSlot.getIndex()];
+        public int getDurabilityForType(ArmorItem.@NotNull Type pType) {
+            return durabilityMultiplier * HEALTH_FUNCTION_FOR_TYPE.get(pType);
         }
 
         @Override
-        public int getDefenseForSlot(EquipmentSlot pSlot) {
-            return slotProtections[pSlot.getIndex()];
+        public int getDefenseForType(ArmorItem.@NotNull Type pType) {
+            return protectionFunctionForType.get(pType);
         }
 
         @Override

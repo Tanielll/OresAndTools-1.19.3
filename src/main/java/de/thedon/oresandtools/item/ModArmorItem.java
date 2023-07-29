@@ -17,8 +17,8 @@ import java.util.List;
 public class ModArmorItem extends ArmorItem {
     private final boolean withToolTip;
 
-    public ModArmorItem(ArmorMaterial materialIn, EquipmentSlot slot, Properties builderIn, boolean withToolTip) {
-        super(materialIn, slot, builderIn);
+    public ModArmorItem(ArmorMaterial materialIn, ArmorItem.Type type, Properties builderIn, boolean withToolTip) {
+        super(materialIn, type, builderIn);
         this.withToolTip = withToolTip;
     }
 

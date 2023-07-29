@@ -8,6 +8,7 @@ import de.thedon.oresandtools.item.ModItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.LivingEntity;
@@ -50,7 +51,7 @@ public class ModEvents {
                 ItemStack useItem = player.getUseItem();
                 if (player.isBlocking() && (useItem.getItem() == ModItems.OBSIDIAN_SHIELD.get())) {
                     DamageSource source = event.getSource();
-                    if (source.isProjectile() || source.isExplosion() || source.isMagic()) {
+                    if (source.is(DamageTypes.ARROW) || source.is(DamageTypes.EXPLOSION) || source.is(DamageTypes.MAGIC)) {
                         useItem.setDamageValue((int)event.getAmount());
                     }
                 }
@@ -66,7 +67,7 @@ public class ModEvents {
                 if (ticksBeforeNextDamageByUran == 0) {
                     if (player.getMainHandItem().getItem() == ModItems.URANIUM_INGOT.get()) {
                         player.setHealth(player.getHealth() - CommonConfig.URANIUM_DAMAGE_AMOUNT.get());
-                        player.animateHurt();
+                        player.animateHurt(1.0F);
                     }
                     ticksBeforeNextDamageByUran = CommonConfig.URANIUM_DAMAGE_TICKRATE.get();
                 } else {
@@ -96,7 +97,7 @@ public class ModEvents {
                             }
                         }
                         if (allValyrian) {
-                            event.setCanceled(event.getSource().isFire());
+                            event.setCanceled(event.getSource().is(DamageTypes.ON_FIRE) || event.getSource().is(DamageTypes.IN_FIRE));
                             player.extinguishFire();
                         }
                         if (allHotDiamond) {
