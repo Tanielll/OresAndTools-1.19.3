@@ -1,8 +1,8 @@
-// 1.19.3	2023-07-29T00:33:45.9770088	Loot Tables
+// 1.19.3	2023-07-29T20:46:56.4225073	Loot Tables
 2adb9bc9eb232d854f5eba3189bc443aa6a7f01a data/oresandtools/loot_tables/blocks/deepslate_obsidian_ore.json
 ae9c7d3d3bf983680fb57452cee6b124e6cee768 data/oresandtools/loot_tables/blocks/deepslate_uranium_ore.json
-09356b185e2dd42a36b74d3d6fafbcd837667c24 data/oresandtools/loot_tables/blocks/deepslate_valyrian_ore.json
-f4961e897f3bcdd8e6bc5f83087dbd4ab563a887 data/oresandtools/loot_tables/blocks/deepslate_xp_ore.json
+83621531ab3c3bd314f71df8dfd1d36301be2c50 data/oresandtools/loot_tables/blocks/deepslate_valyrian_ore.json
+ec0d1819691893ecab310d946425ee6d685d38f0 data/oresandtools/loot_tables/blocks/deepslate_xp_ore.json
 5ea67f475bf5701fe886781c7dcead6431abb646 data/oresandtools/loot_tables/blocks/hardened_diamond_block.json
 88ba535af9cddf507f4c0f2046c7ef439e0e7522 data/oresandtools/loot_tables/blocks/molten_copper_ore.json
 768dac1dc4f4649abe12d1d647df5a64862dee97 data/oresandtools/loot_tables/blocks/molten_gold_ore.json
@@ -13,5 +13,5 @@ f4961e897f3bcdd8e6bc5f83087dbd4ab563a887 data/oresandtools/loot_tables/blocks/de
 08ac0f3ef403b65f732858423a7a2b30a37927af data/oresandtools/loot_tables/blocks/obsidian_ore.json
 ce8fbabb95650b0caff73d273cbe56f99c4bd541 data/oresandtools/loot_tables/blocks/steel_block.json
 1b58464ad9828b955e89187e04460a3251030f88 data/oresandtools/loot_tables/blocks/uranium_ore.json
-cf6358aaef5e49507ad87eac7cd4c0e24bc74816 data/oresandtools/loot_tables/blocks/valyrian_ore.json
-9750fa897db1aaa825f4d4dedbc3a06ee42939ab data/oresandtools/loot_tables/blocks/xp_ore.json
+811eff56fd9c6fd224b5ac14b55a722f9b2375da data/oresandtools/loot_tables/blocks/valyrian_ore.json
+cbcb3492161a4b75a53e3bab9d391e532865482c data/oresandtools/loot_tables/blocks/xp_ore.json

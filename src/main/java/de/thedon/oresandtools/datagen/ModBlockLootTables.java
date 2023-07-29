@@ -14,6 +14,7 @@ import net.minecraft.world.level.storage.loot.functions.ApplyBonusCount;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition;
 import net.minecraft.world.level.storage.loot.providers.number.BinomialDistributionGenerator;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
@@ -35,8 +36,8 @@ public class ModBlockLootTables extends BlockLootSubProvider {
         add(ModBlocks.DEEPSLATE_VALYRIAN_ORE.get(), this::createValyrianOreDrops);
         add(ModBlocks.OBSIDIAN_ORE.get(), this::createObsidianOreDrops);
         add(ModBlocks.DEEPSLATE_OBSIDIAN_ORE.get(), this::createObsidianOreDrops);
-        add(ModBlocks.XP_ORE.get(), (pBlock) -> createOreDrop(pBlock, Items.COBBLESTONE));
-        add(ModBlocks.DEEPSLATE_XP_ORE.get(), (pBlock) -> createOreDrop(pBlock, Items.COBBLED_DEEPSLATE));
+        add(ModBlocks.XP_ORE.get(), (pBlock) -> createSingleItemTableWithSilkTouch(pBlock, Items.COBBLESTONE));
+        add(ModBlocks.DEEPSLATE_XP_ORE.get(), (pBlock) -> createSingleItemTableWithSilkTouch(pBlock, Items.COBBLED_DEEPSLATE));
         add(ModBlocks.URANIUM_ORE.get(), (pBlock) -> createOreDrop(pBlock, ModItems.RAW_URANIUM.get()));
         add(ModBlocks.DEEPSLATE_URANIUM_ORE.get(), (pBlock) -> createOreDrop(pBlock, ModItems.RAW_URANIUM.get()));
         /* MOLTEN BLOCKS */
@@ -54,9 +55,11 @@ public class ModBlockLootTables extends BlockLootSubProvider {
     }
 
     protected LootTable.Builder createValyrianOreDrops(Block pBlock) {
-        return createSilkTouchDispatchTable(pBlock, this.applyExplosionDecay(pBlock, LootItem.lootTableItem(
-                ModItems.VALYRIAN_DUST.get()).when(LootItemRandomChanceCondition.randomChance(0.25F))
-                    .apply(SetItemCountFunction.setCount(BinomialDistributionGenerator.binomial(3, 0.7F)))
+        return createSilkTouchDispatchTable(pBlock,
+                this.applyExplosionDecay(pBlock, LootItem.lootTableItem(ModItems.VALYRIAN_DUST.get())
+                    .apply(SetItemCountFunction.setCount(BinomialDistributionGenerator.binomial(3, 0.5F)))
+                        .when(LootItemRandomChanceCondition.randomChance(0.25F)))
+                .append(LootItem.lootTableItem(ModItems.VALYRIAN_DUST.get())
                     .apply(ApplyBonusCount.addOreBonusCount(Enchantments.BLOCK_FORTUNE))));
     }
 

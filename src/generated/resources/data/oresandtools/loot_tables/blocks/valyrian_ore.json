@@ -27,33 +27,44 @@
               "name": "oresandtools:valyrian_ore"
             },
             {
-              "type": "minecraft:item",
-              "conditions": [
+              "type": "minecraft:group",
+              "children": [
                 {
-                  "chance": 0.25,
-                  "condition": "minecraft:random_chance"
-                }
-              ],
-              "functions": [
-                {
-                  "add": false,
-                  "count": {
-                    "type": "minecraft:binomial",
-                    "n": 3.0,
-                    "p": 0.7
-                  },
-                  "function": "minecraft:set_count"
+                  "type": "minecraft:item",
+                  "conditions": [
+                    {
+                      "chance": 0.25,
+                      "condition": "minecraft:random_chance"
+                    }
+                  ],
+                  "functions": [
+                    {
+                      "add": false,
+                      "count": {
+                        "type": "minecraft:binomial",
+                        "n": 3.0,
+                        "p": 0.5
+                      },
+                      "function": "minecraft:set_count"
+                    },
+                    {
+                      "function": "minecraft:explosion_decay"
+                    }
+                  ],
+                  "name": "oresandtools:valyrian_dust"
                 },
                 {
-                  "enchantment": "minecraft:fortune",
-                  "formula": "minecraft:ore_drops",
-                  "function": "minecraft:apply_bonus"
-                },
-                {
-                  "function": "minecraft:explosion_decay"
+                  "type": "minecraft:item",
+                  "functions": [
+                    {
+                      "enchantment": "minecraft:fortune",
+                      "formula": "minecraft:ore_drops",
+                      "function": "minecraft:apply_bonus"
+                    }
+                  ],
+                  "name": "oresandtools:valyrian_dust"
                 }
-              ],
-              "name": "oresandtools:valyrian_dust"
+              ]
             }
           ]
         }

@@ -6,7 +6,10 @@
     "targets": [
       {
         "state": {
-          "Name": "oresandtools:xp_ore"
+          "Name": "oresandtools:xp_ore",
+          "Properties": {
+            "lit": "false"
+          }
         },
         "target": {
           "predicate_type": "minecraft:tag_match",
@@ -15,7 +18,10 @@
       },
       {
         "state": {
-          "Name": "oresandtools:deepslate_xp_ore"
+          "Name": "oresandtools:deepslate_xp_ore",
+          "Properties": {
+            "lit": "false"
+          }
         },
         "target": {
           "predicate_type": "minecraft:tag_match",
