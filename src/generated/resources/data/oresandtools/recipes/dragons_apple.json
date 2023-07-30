@@ -19,5 +19,6 @@
   ],
   "result": {
     "item": "oresandtools:dragons_apple"
-  }
+  },
+  "show_notification": true
 }

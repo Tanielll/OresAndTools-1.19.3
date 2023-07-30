@@ -16,5 +16,6 @@
   ],
   "result": {
     "item": "oresandtools:valyrian_pickaxe"
-  }
+  },
+  "show_notification": true
 }

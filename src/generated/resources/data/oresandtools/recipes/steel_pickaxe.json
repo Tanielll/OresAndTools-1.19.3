@@ -16,5 +16,6 @@
   ],
   "result": {
     "item": "oresandtools:steel_pickaxe"
-  }
+  },
+  "show_notification": true
 }

@@ -32,5 +32,6 @@
     "recipes": [
       "oresandtools:dragons_apple"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

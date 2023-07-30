@@ -30,5 +30,6 @@
     "recipes": [
       "oresandtools:stone_from_blasting_deepslate_xp_ore"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

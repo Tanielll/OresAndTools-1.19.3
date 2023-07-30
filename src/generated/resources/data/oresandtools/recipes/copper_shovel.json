@@ -16,5 +16,6 @@
   ],
   "result": {
     "item": "oresandtools:copper_shovel"
-  }
+  },
+  "show_notification": true
 }

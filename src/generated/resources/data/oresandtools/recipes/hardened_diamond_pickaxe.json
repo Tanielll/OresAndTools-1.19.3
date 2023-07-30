@@ -16,5 +16,6 @@
   ],
   "result": {
     "item": "oresandtools:hardened_diamond_pickaxe"
-  }
+  },
+  "show_notification": true
 }

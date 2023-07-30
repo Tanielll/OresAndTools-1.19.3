@@ -16,5 +16,6 @@
   ],
   "result": {
     "item": "oresandtools:valyrian_ingot"
-  }
+  },
+  "show_notification": true
 }

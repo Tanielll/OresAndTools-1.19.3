@@ -16,5 +16,6 @@
   ],
   "result": {
     "item": "oresandtools:hot_hardened_diamond_shovel"
-  }
+  },
+  "show_notification": true
 }

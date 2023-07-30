@@ -30,5 +30,6 @@
     "recipes": [
       "oresandtools:obsidian_shovel"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

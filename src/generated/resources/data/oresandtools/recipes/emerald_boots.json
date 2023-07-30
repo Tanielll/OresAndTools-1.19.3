@@ -12,5 +12,6 @@
   ],
   "result": {
     "item": "oresandtools:emerald_boots"
-  }
+  },
+  "show_notification": true
 }

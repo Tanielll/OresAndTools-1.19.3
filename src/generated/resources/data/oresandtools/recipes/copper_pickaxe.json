@@ -16,5 +16,6 @@
   ],
   "result": {
     "item": "oresandtools:copper_pickaxe"
-  }
+  },
+  "show_notification": true
 }

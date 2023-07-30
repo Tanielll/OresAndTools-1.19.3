@@ -16,5 +16,6 @@
   ],
   "result": {
     "item": "oresandtools:emerald_sword"
-  }
+  },
+  "show_notification": true
 }

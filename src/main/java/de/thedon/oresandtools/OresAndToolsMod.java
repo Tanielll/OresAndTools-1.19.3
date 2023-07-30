@@ -6,13 +6,10 @@ import de.thedon.oresandtools.config.ClientConfig;
 import de.thedon.oresandtools.config.CommonConfig;
 import de.thedon.oresandtools.item.ModCreativeModeTabs;
 import de.thedon.oresandtools.item.ModItems;
-import de.thedon.oresandtools.render.ModBEWLRenderer;
 import de.thedon.oresandtools.util.PropertyRegistration;
-import net.minecraft.client.model.ShieldModel;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.CreativeModeTabEvent;
+import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -32,6 +29,8 @@ public class OresAndToolsMod {
     public OresAndToolsMod() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
+        ModCreativeModeTabs.register(modEventBus);
+
         ModItems.register(modEventBus);
         ModBlocks.register(modEventBus);
 
@@ -47,8 +46,8 @@ public class OresAndToolsMod {
 
     private void commonSetup(final FMLCommonSetupEvent event) { }
 
-    private void addCreative(CreativeModeTabEvent.BuildContents event) {
-        if (event.getTab() == ModCreativeModeTabs.MAIN_TAB) {
+    private void addCreative(BuildCreativeModeTabContentsEvent event) {
+        if (event.getTab() == ModCreativeModeTabs.MAIN_TAB.get()) {
             event.accept(ModItems.STEEL_CHUNK.get());
             event.accept(ModItems.STEEL_INGOT.get());
             event.accept(ModItems.VALYRIAN_DUST.get());
@@ -78,7 +77,7 @@ public class OresAndToolsMod {
 //            event.accept(ModBlocks.MOLTEN_STONE.get());
 //            event.accept(ModBlocks.MOLTEN_SAND.get());
         }
-        if (event.getTab() == ModCreativeModeTabs.TOOLS_TAB) {
+        if (event.getTab() == ModCreativeModeTabs.TOOLS_TAB.get()) {
             event.accept(ModItems.COPPER_SHOVEL.get());
             event.accept(ModItems.COPPER_PICKAXE.get());
             event.accept(ModItems.COPPER_AXE.get());
@@ -108,7 +107,7 @@ public class OresAndToolsMod {
             event.accept(ModItems.OBSIDIAN_AXE.get());
             event.accept(ModItems.OBSIDIAN_HOE.get());
         }
-        if (event.getTab() == ModCreativeModeTabs.COMBAT_TAB) {
+        if (event.getTab() == ModCreativeModeTabs.COMBAT_TAB.get()) {
             event.accept(ModItems.COPPER_SWORD.get());
             event.accept(ModItems.STEEL_SWORD.get());
             event.accept(ModItems.HARDENED_DIAMOND_SWORD.get());

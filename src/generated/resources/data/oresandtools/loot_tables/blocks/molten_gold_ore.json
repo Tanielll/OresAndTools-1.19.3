@@ -45,5 +45,6 @@
       ],
       "rolls": 1.0
     }
-  ]
+  ],
+  "random_sequence": "oresandtools:blocks/molten_gold_ore"
 }

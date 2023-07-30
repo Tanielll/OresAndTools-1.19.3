@@ -31,5 +31,6 @@
     "recipes": [
       "oresandtools:valyrian_ingot"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

@@ -16,5 +16,6 @@
   ],
   "result": {
     "item": "oresandtools:emerald_hoe"
-  }
+  },
+  "show_notification": true
 }

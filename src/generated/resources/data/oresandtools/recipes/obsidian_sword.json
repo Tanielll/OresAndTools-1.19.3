@@ -16,5 +16,6 @@
   ],
   "result": {
     "item": "oresandtools:obsidian_sword"
-  }
+  },
+  "show_notification": true
 }

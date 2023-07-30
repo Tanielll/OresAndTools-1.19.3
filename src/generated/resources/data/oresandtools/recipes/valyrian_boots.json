@@ -12,5 +12,6 @@
   ],
   "result": {
     "item": "oresandtools:valyrian_boots"
-  }
+  },
+  "show_notification": true
 }

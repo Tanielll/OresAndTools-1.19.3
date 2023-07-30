@@ -193,7 +193,7 @@ public class ModEvents {
                     if (player.getMainHandItem().getItem() == ModItems.EMERALD_SWORD.get()) {
                         LivingEntity entity = event.getEntity();
                         if (entity instanceof Villager) {
-                            Level level = entity.getLevel();
+                            Level level = entity.getCommandSenderWorld();
                             event.getDrops().add(new ItemEntity(level, entity.getX(), entity.getY(), entity.getZ(),
                                 new ItemStack(Items.EMERALD)));
                         }

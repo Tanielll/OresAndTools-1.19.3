@@ -12,5 +12,6 @@
   ],
   "result": {
     "item": "oresandtools:emerald_helmet"
-  }
+  },
+  "show_notification": true
 }

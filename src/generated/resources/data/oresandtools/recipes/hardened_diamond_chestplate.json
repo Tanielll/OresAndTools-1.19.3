@@ -13,5 +13,6 @@
   ],
   "result": {
     "item": "oresandtools:hardened_diamond_chestplate"
-  }
+  },
+  "show_notification": true
 }

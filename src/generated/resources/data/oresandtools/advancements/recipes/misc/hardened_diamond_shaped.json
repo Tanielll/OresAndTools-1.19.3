@@ -31,5 +31,6 @@
     "recipes": [
       "oresandtools:hardened_diamond_shaped"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

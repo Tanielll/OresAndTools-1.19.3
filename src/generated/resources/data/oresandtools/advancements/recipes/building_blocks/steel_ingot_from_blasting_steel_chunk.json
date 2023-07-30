@@ -30,5 +30,6 @@
     "recipes": [
       "oresandtools:steel_ingot_from_blasting_steel_chunk"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

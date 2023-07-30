@@ -30,5 +30,6 @@
     "recipes": [
       "oresandtools:emerald_chestplate"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

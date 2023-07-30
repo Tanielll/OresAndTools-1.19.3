@@ -31,5 +31,6 @@
     "recipes": [
       "oresandtools:obsidian_shield"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

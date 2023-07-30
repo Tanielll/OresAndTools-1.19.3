@@ -16,5 +16,6 @@
   ],
   "result": {
     "item": "oresandtools:steel_shovel"
-  }
+  },
+  "show_notification": true
 }

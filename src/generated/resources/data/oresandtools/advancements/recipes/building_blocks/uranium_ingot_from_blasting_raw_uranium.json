@@ -30,5 +30,6 @@
     "recipes": [
       "oresandtools:uranium_ingot_from_blasting_raw_uranium"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

@@ -19,5 +19,6 @@
   ],
   "result": {
     "item": "oresandtools:improvised_reactor"
-  }
+  },
+  "show_notification": true
 }

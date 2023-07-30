@@ -16,5 +16,6 @@
   ],
   "result": {
     "item": "oresandtools:steel_sword"
-  }
+  },
+  "show_notification": true
 }

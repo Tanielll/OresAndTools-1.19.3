@@ -16,5 +16,6 @@
   ],
   "result": {
     "item": "oresandtools:hardened_diamond"
-  }
+  },
+  "show_notification": true
 }

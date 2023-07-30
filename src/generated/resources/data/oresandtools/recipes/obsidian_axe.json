@@ -16,5 +16,6 @@
   ],
   "result": {
     "item": "oresandtools:obsidian_axe"
-  }
+  },
+  "show_notification": true
 }

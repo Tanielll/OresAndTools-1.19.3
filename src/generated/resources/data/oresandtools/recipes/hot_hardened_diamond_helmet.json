@@ -12,5 +12,6 @@
   ],
   "result": {
     "item": "oresandtools:hot_hardened_diamond_helmet"
-  }
+  },
+  "show_notification": true
 }

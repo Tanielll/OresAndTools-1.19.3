@@ -12,5 +12,6 @@
   ],
   "result": {
     "item": "oresandtools:copper_helmet"
-  }
+  },
+  "show_notification": true
 }

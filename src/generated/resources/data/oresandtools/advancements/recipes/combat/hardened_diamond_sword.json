@@ -30,5 +30,6 @@
     "recipes": [
       "oresandtools:hardened_diamond_sword"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

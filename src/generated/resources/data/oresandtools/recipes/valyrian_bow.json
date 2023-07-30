@@ -16,5 +16,6 @@
   ],
   "result": {
     "item": "oresandtools:valyrian_bow"
-  }
+  },
+  "show_notification": true
 }

@@ -24,6 +24,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         simpleItem(ModItems.HEATING_HARDENED_DIAMOND_3);
         simpleItem(ModItems.HOT_HARDENED_DIAMOND);
         simpleItem(ModItems.VALYRIAN_DUST);
+        simpleItem(ModItems.VALYRIAN_INGOT);
         simpleItem(ModItems.OBSIDIAN_SHARD);
         simpleItem(ModItems.DRAGONS_APPLE);
         simpleItem(ModItems.STEEL_CHUNK);

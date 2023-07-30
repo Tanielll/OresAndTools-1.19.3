@@ -12,5 +12,6 @@
   ],
   "result": {
     "item": "oresandtools:hardened_diamond_boots"
-  }
+  },
+  "show_notification": true
 }

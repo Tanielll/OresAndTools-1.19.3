@@ -16,5 +16,6 @@
   ],
   "result": {
     "item": "oresandtools:copper_hoe"
-  }
+  },
+  "show_notification": true
 }

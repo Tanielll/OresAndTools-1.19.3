@@ -1,4 +1,4 @@
-// 1.19.3	2023-07-29T00:33:45.9750094	Item Models: oresandtools
+// 1.20.1	2023-07-30T02:11:50.662138	Item Models: oresandtools
 4ee3d8779b28ab4ffb06de53f81b955090e87804 assets/oresandtools/models/item/copper_axe.json
 155b3fd65c3b27785a1a5f0610523f2e9e709e35 assets/oresandtools/models/item/copper_boots.json
 378b299485c6673b5830630b605277533615724c assets/oresandtools/models/item/copper_chestplate.json
@@ -71,6 +71,7 @@ deea530a2375ede60ef4e363af6fa653a2fc1801 assets/oresandtools/models/item/valyria
 fc82b937d488b494e445d173afa37989c4646a88 assets/oresandtools/models/item/valyrian_dust.json
 d2db326bdaaf712a9ac5cf1559a534e6f318c002 assets/oresandtools/models/item/valyrian_helmet.json
 5268a4f251e4f31334233b4999aeff0f2491d0a4 assets/oresandtools/models/item/valyrian_hoe.json
+eb8a79e739f7e3b0820d539bfcc0f2f49bd0acfe assets/oresandtools/models/item/valyrian_ingot.json
 42351fe1ced3d0e70480100e6a2d583ca2ec672b assets/oresandtools/models/item/valyrian_leggings.json
 5ccd88d6076ee41083e88e7aea0aaa5977bf1cef assets/oresandtools/models/item/valyrian_pickaxe.json
 e3938adbc2b094bd671a243b2b2518b22e2d3f25 assets/oresandtools/models/item/valyrian_shovel.json

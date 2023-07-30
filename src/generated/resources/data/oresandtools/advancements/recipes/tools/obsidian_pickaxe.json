@@ -30,5 +30,6 @@
     "recipes": [
       "oresandtools:obsidian_pickaxe"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

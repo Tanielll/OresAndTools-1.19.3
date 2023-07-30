@@ -16,5 +16,6 @@
   ],
   "result": {
     "item": "oresandtools:obsidian_pickaxe"
-  }
+  },
+  "show_notification": true
 }

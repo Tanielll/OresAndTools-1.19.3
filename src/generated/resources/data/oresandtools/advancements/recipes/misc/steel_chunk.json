@@ -31,5 +31,6 @@
     "recipes": [
       "oresandtools:steel_chunk"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

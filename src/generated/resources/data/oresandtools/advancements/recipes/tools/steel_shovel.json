@@ -30,5 +30,6 @@
     "recipes": [
       "oresandtools:steel_shovel"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }
