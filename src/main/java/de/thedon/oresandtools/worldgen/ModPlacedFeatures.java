@@ -25,6 +25,9 @@ public class ModPlacedFeatures {
     public static final ResourceKey<PlacedFeature> ORE_VALYRIAN_LARGE_PLACED_KEY = createKey("ore_valyrian_large");
     public static final ResourceKey<PlacedFeature> ORE_VALYRIAN_MIDDLE_PLACED_KEY = createKey("ore_valyrian_middle");
     public static final ResourceKey<PlacedFeature> ORE_VALYRIAN_SMALL_PLACED_KEY = createKey("ore_valyrian_small");
+    public static final ResourceKey<PlacedFeature> ORE_END_VALYRIAN_LARGE_PLACED_KEY = createKey("ore_end_valyrian_large");
+    public static final ResourceKey<PlacedFeature> ORE_END_VALYRIAN_MIDDLE_PLACED_KEY = createKey("ore_end_valyrian_middle");
+    public static final ResourceKey<PlacedFeature> ORE_END_VALYRIAN_SMALL_PLACED_KEY = createKey("ore_end_valyrian_small");
     public static final ResourceKey<PlacedFeature> ORE_XP_LARGE_PLACED_KEY = createKey("ore_xp_large");
     public static final ResourceKey<PlacedFeature> ORE_XP_MIDDLE_PLACED_KEY = createKey("ore_xp_middle");
     public static final ResourceKey<PlacedFeature> ORE_XP_SMALL_PLACED_KEY = createKey("ore_xp_small");
@@ -61,6 +64,16 @@ public class ModPlacedFeatures {
         register(context, ORE_VALYRIAN_SMALL_PLACED_KEY, configuredFeatures.getOrThrow(ModConfiguredFeatures.ORE_VALYRIAN_SMALL_KEY),
                 ModOrePlacements.commonOrePlacement(8,
                         HeightRangePlacement.triangle(VerticalAnchor.aboveBottom(-80), VerticalAnchor.aboveBottom(80))));
+
+        register(context, ORE_END_VALYRIAN_LARGE_PLACED_KEY, configuredFeatures.getOrThrow(ModConfiguredFeatures.ORE_END_VALYRIAN_LARGE_KEY),
+                ModOrePlacements.commonOrePlacement(4,
+                        HeightRangePlacement.uniform(VerticalAnchor.aboveBottom(-80), VerticalAnchor.absolute(80))));
+        register(context, ORE_END_VALYRIAN_MIDDLE_PLACED_KEY, configuredFeatures.getOrThrow(ModConfiguredFeatures.ORE_END_VALYRIAN_MIDDLE_KEY),
+                ModOrePlacements.commonOrePlacement(8,
+                        HeightRangePlacement.uniform(VerticalAnchor.aboveBottom(-80), VerticalAnchor.absolute(80))));
+        register(context, ORE_END_VALYRIAN_SMALL_PLACED_KEY, configuredFeatures.getOrThrow(ModConfiguredFeatures.ORE_END_VALYRIAN_SMALL_KEY),
+                ModOrePlacements.commonOrePlacement(12,
+                        HeightRangePlacement.uniform(VerticalAnchor.aboveBottom(-80), VerticalAnchor.absolute(80))));
 
         register(context, ORE_XP_LARGE_PLACED_KEY, configuredFeatures.getOrThrow(ModConfiguredFeatures.ORE_XP_LARGE_KEY),
                 ModOrePlacements.commonOrePlacement(6,

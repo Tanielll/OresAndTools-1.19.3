@@ -64,6 +64,7 @@ public class OresAndToolsMod {
             event.accept(ModBlocks.HARDENED_DIAMOND_BLOCK.get());
             event.accept(ModBlocks.VALYRIAN_ORE.get());
             event.accept(ModBlocks.DEEPSLATE_VALYRIAN_ORE.get());
+            event.accept(ModBlocks.ENDSTONE_VALYRIAN_ORE.get());
             event.accept(ModBlocks.OBSIDIAN_ORE.get());
             event.accept(ModBlocks.DEEPSLATE_OBSIDIAN_ORE.get());
             event.accept(ModBlocks.XP_ORE.get());

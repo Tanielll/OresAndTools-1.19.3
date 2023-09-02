@@ -34,6 +34,7 @@ public class ModBlockLootTables extends BlockLootSubProvider {
         /* ORES */
         add(ModBlocks.VALYRIAN_ORE.get(), this::createValyrianOreDrops);
         add(ModBlocks.DEEPSLATE_VALYRIAN_ORE.get(), this::createValyrianOreDrops);
+        add(ModBlocks.ENDSTONE_VALYRIAN_ORE.get(), this::createValyrianOreDrops);
         add(ModBlocks.OBSIDIAN_ORE.get(), this::createObsidianOreDrops);
         add(ModBlocks.DEEPSLATE_OBSIDIAN_ORE.get(), this::createObsidianOreDrops);
         add(ModBlocks.XP_ORE.get(), (pBlock) -> createSingleItemTableWithSilkTouch(pBlock, Items.COBBLESTONE));
