@@ -77,6 +77,15 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .unlockedBy("has_steel_chunk_ingredients", inventoryTrigger(ItemPredicate.Builder.item()
                         .of(Items.COAL, Items.RAW_IRON).build()))
                 .save(pWriter);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.STEEL_CHUNK.get())
+                .define('C', Ingredient.of(Items.COAL))
+                .define('I', Items.IRON_NUGGET)
+                .pattern("III")
+                .pattern("ICI")
+                .pattern("III")
+                .unlockedBy("has_steel_chunk_ingredients_2", inventoryTrigger(ItemPredicate.Builder.item()
+                        .of(Items.COAL, Items.IRON_NUGGET).build()))
+                .save(pWriter, "steel_chunk_2");
         ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, ModItems.VALYRIAN_BOW.get())
                 .define('V', ModItems.VALYRIAN_INGOT.get())
                 .define('S', Items.STRING)

@@ -1,4 +1,6 @@
-// 1.20.1	2023-07-30T02:02:41.9471004	Recipes
+// 1.20.1	2023-09-03T18:13:13.6255486	Recipes
+08c060746934f4e7f95db481f41648168a7084b2 data/minecraft/advancements/recipes/misc/steel_chunk_2.json
+0cda345c88569083644a74224bfd88bc47666efb data/minecraft/recipes/steel_chunk_2.json
 27a270f7dd6bee068754c2c173b2de52fff8c9eb data/oresandtools/advancements/recipes/building_blocks/hardened_diamond_block.json
 4b9d21557d138dc3e327c649dcf748e2cb6a8ac7 data/oresandtools/advancements/recipes/building_blocks/obsidian.json
 e7b8977300014a83a1d99466fbb433eee20b2ec1 data/oresandtools/advancements/recipes/building_blocks/obsidian_from_blasting_obsidian_ore.json
