@@ -16,6 +16,7 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCon
 import net.minecraft.world.level.storage.loot.providers.number.BinomialDistributionGenerator;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 
@@ -31,6 +32,7 @@ public class ModBlockLootTables extends BlockLootSubProvider {
         /* NORMAL BLOCKS */
         dropSelf(ModBlocks.HARDENED_DIAMOND_BLOCK.get());
         dropSelf(ModBlocks.STEEL_BLOCK.get());
+        dropSelf(ModBlocks.VALYRIAN_CHEST.get());
         /* ORES */
         add(ModBlocks.VALYRIAN_ORE.get(), this::createValyrianOreDrops);
         add(ModBlocks.DEEPSLATE_VALYRIAN_ORE.get(), this::createValyrianOreDrops);

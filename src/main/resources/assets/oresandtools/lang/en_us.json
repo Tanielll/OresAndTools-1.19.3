@@ -10,9 +10,11 @@
   "item.oresandtools.steel_chunk" : "Steel Chunk",
   "item.oresandtools.steel_ingot" : "Steel Ingot",
   "item.oresandtools.valyrian_ingot" : "Valyrian Ingot",
+  "item.oresandtools.valyrian_leather" : "Valyrian Leather",
   "item.oresandtools.raw_uranium" : "Raw Uranium",
   "item.oresandtools.uranium_ingot" : "Uranium Ingot",
   "item.oresandtools.improvised_reactor" : "Improvised Reactor",
+  "item.oresandtools.shulker_backpack" : "Shulker Backpack",
 
   "item.oresandtools.copper_shovel" : "Copper Shovel",
   "item.oresandtools.copper_pickaxe" : "Copper Pickaxe",
@@ -85,6 +87,7 @@
 
   "block.oresandtools.hardened_diamond_block" : "Block of Hardened Diamond",
   "block.oresandtools.steel_block" : "Block of Steel",
+  "block.oresandtools.valyrian_chest" : "Valyrian Chest",
   "block.oresandtools.endstone_valyrian_ore" : "Endstone Valyrian Ore",
   "block.oresandtools.deepslate_valyrian_ore" : "Deepslate Valyrian Ore",
   "block.oresandtools.valyrian_ore" : "Valyrian Ore",
@@ -100,6 +103,8 @@
   "block.oresandtools.molten_uranium_ore" : "Molten Uranium Ore",
   "block.oresandtools.molten_stone" : "Molten Stone",
   "block.oresandtools.molten_sand" : "Molten Sand",
+
+  "container.oresandtools.valyrianChestDouble" : "Large Valyrian Chest",
 
   "itemGroup.oresandtools.oat_main_tab": "OAT Mod",
   "itemGroup.oresandtools.oat_tools_tab": "OAT Tools",

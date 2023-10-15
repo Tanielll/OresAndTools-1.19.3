@@ -104,6 +104,27 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .unlockedBy("has_valyrian_ingot_ingredients", inventoryTrigger(ItemPredicate.Builder.item()
                         .of(ModItems.VALYRIAN_DUST.get(), ModItems.STEEL_INGOT.get()).build()))
                 .save(pWriter);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.VALYRIAN_LEATHER.get())
+                .define('V', ModItems.VALYRIAN_DUST.get())
+                .define('L', Items.LEATHER)
+                .pattern("VVV")
+                .pattern("VLV")
+                .pattern("VVV")
+                .unlockedBy("has_valyrian_leather_ingredients", inventoryTrigger(ItemPredicate.Builder.item()
+                        .of(ModItems.VALYRIAN_DUST.get(), Items.LEATHER).build()))
+                .save(pWriter);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.SHULKER_BACKPACK.get())
+                .define('L', ModItems.VALYRIAN_LEATHER.get())
+                .define('I', ModItems.VALYRIAN_INGOT.get())
+                .define('S', Blocks.SHULKER_BOX)
+                .define('E', Items.ENDER_EYE)
+                .pattern("LSL")
+                .pattern("IEI")
+                .pattern("LSL")
+                .unlockedBy("has_shulker_backpack_ingredients", inventoryTrigger(ItemPredicate.Builder.item()
+                        .of(ModItems.VALYRIAN_LEATHER.get(), ModItems.VALYRIAN_LEATHER.get(),
+                            Blocks.SHULKER_BOX, Items.ENDER_EYE).build()))
+                .save(pWriter);
 
         /* NINE BLOCK STORAGE */
         nineBlockStorageRecipes(pWriter, RecipeCategory.MISC, ModItems.HARDENED_DIAMOND.get(),

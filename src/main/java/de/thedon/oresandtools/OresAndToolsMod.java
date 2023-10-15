@@ -4,10 +4,18 @@ import com.mojang.logging.LogUtils;
 import de.thedon.oresandtools.block.ModBlocks;
 import de.thedon.oresandtools.config.ClientConfig;
 import de.thedon.oresandtools.config.CommonConfig;
+import de.thedon.oresandtools.entity.ModBlockEntities;
+import de.thedon.oresandtools.entity.ValyrianChestBlockEntity;
+import de.thedon.oresandtools.inventory.BackpackScreen;
+import de.thedon.oresandtools.inventory.ModMenuTypes;
+import de.thedon.oresandtools.inventory.ValyrianChestScreen;
 import de.thedon.oresandtools.item.ModCreativeModeTabs;
 import de.thedon.oresandtools.item.ModItems;
+import de.thedon.oresandtools.render.ValyrianChestRenderer;
 import de.thedon.oresandtools.util.PropertyRegistration;
+import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -34,6 +42,10 @@ public class OresAndToolsMod {
         ModItems.register(modEventBus);
         ModBlocks.register(modEventBus);
 
+        ModBlockEntities.register(modEventBus);
+
+        ModMenuTypes.register(modEventBus);
+
         modEventBus.addListener(this::commonSetup);
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientConfig.SPEC, MOD_ID + "-client.toml");
@@ -59,9 +71,12 @@ public class OresAndToolsMod {
             event.accept(ModItems.HARDENED_DIAMOND.get());
             event.accept(ModItems.HOT_HARDENED_DIAMOND.get());
             event.accept(ModItems.OBSIDIAN_SHARD.get());
+            event.accept(ModItems.VALYRIAN_LEATHER.get());
+            event.accept(ModItems.SHULKER_BACKPACK.get());
 
             event.accept(ModBlocks.STEEL_BLOCK.get());
             event.accept(ModBlocks.HARDENED_DIAMOND_BLOCK.get());
+            event.accept(ModBlocks.VALYRIAN_CHEST.get());
             event.accept(ModBlocks.VALYRIAN_ORE.get());
             event.accept(ModBlocks.DEEPSLATE_VALYRIAN_ORE.get());
             event.accept(ModBlocks.ENDSTONE_VALYRIAN_ORE.get());
@@ -71,12 +86,6 @@ public class OresAndToolsMod {
             event.accept(ModBlocks.DEEPSLATE_XP_ORE.get());
             event.accept(ModBlocks.URANIUM_ORE.get());
             event.accept(ModBlocks.DEEPSLATE_URANIUM_ORE.get());
-//            event.accept(ModBlocks.MOLTEN_COPPER_ORE.get());
-//            event.accept(ModBlocks.MOLTEN_IRON_ORE.get());
-//            event.accept(ModBlocks.MOLTEN_GOLD_ORE.get());
-//            event.accept(ModBlocks.MOLTEN_URANIUM_ORE.get());
-//            event.accept(ModBlocks.MOLTEN_STONE.get());
-//            event.accept(ModBlocks.MOLTEN_SAND.get());
         }
         if (event.getTab() == ModCreativeModeTabs.TOOLS_TAB.get()) {
             event.accept(ModItems.COPPER_SHOVEL.get());
@@ -154,6 +163,14 @@ public class OresAndToolsMod {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
             PropertyRegistration.registerProperties();
+            MenuScreens.register(ModMenuTypes.BACKPACK_MENU.get(), BackpackScreen::new);
+            MenuScreens.register(ModMenuTypes.VALYRIAN_CHEST_MENU_6x9.get(), ValyrianChestScreen::screen6x9);
+            MenuScreens.register(ModMenuTypes.VALYRIAN_CHEST_MENU_9x12.get(), ValyrianChestScreen::screen9x12);
+        }
+
+        @SubscribeEvent
+        public static void registerRenderers(final EntityRenderersEvent.RegisterRenderers event) {
+            event.registerBlockEntityRenderer(ModBlockEntities.VALYRIAN_CHEST.get(), ValyrianChestRenderer::new);
         }
     }
 }

@@ -32,6 +32,8 @@ public class ModItemModelProvider extends ItemModelProvider {
         simpleItem(ModItems.RAW_URANIUM);
         simpleItem(ModItems.URANIUM_INGOT);
         simpleItem(ModItems.IMPROVISED_REACTOR);
+        simpleItem(ModItems.VALYRIAN_LEATHER);
+        simpleItem(ModItems.SHULKER_BACKPACK);
         /* TOOLS */
         handheldItem(ModItems.COPPER_SHOVEL);
         handheldItem(ModItems.COPPER_PICKAXE);

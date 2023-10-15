@@ -35,6 +35,8 @@ public class ModItems {
     public static final RegistryObject<Item> RAW_URANIUM = ITEMS.register("raw_uranium", () -> new ModItem(new Item.Properties(), true));
     public static final RegistryObject<Item> URANIUM_INGOT = ITEMS.register("uranium_ingot", () -> new ModItem(new Item.Properties(), true));
     public static final RegistryObject<Item> IMPROVISED_REACTOR = ITEMS.register("improvised_reactor", () -> new ImprovisedReactorItem(new Item.Properties()));
+    public static final RegistryObject<Item> VALYRIAN_LEATHER = ITEMS.register("valyrian_leather", () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> SHULKER_BACKPACK = ITEMS.register("shulker_backpack", () -> new BackpackItem(new Item.Properties(), false));
 
     /* TOOLS */
     public static final RegistryObject<Item> COPPER_SHOVEL = ITEMS.register("copper_shovel", () -> new ShovelItem(ModTiers.COPPER, 1.5f, -3f, new Item.Properties()));

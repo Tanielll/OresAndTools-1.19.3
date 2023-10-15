@@ -1,7 +1,10 @@
 package de.thedon.oresandtools.block;
 
 import de.thedon.oresandtools.OresAndToolsMod;
+import de.thedon.oresandtools.entity.ModBlockEntities;
 import de.thedon.oresandtools.item.ModItems;
+import de.thedon.oresandtools.render.ModBEWLRenderer;
+import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -13,11 +16,13 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.MapColor;
+import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.function.ToIntFunction;
 
@@ -27,6 +32,7 @@ public class ModBlocks {
     /* NORMAL BLOCKS */
     public static final RegistryObject<Block> HARDENED_DIAMOND_BLOCK = registerBlock("hardened_diamond_block", () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(25f).requiresCorrectToolForDrops().sound(SoundType.METAL)));
     public static final RegistryObject<Block> STEEL_BLOCK = registerBlock("steel_block", () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f, 10f).requiresCorrectToolForDrops().sound(SoundType.METAL)));
+    public static final RegistryObject<Block> VALYRIAN_CHEST = registerBlock("valyrian_chest", () -> new ValyrianChestBlock(BlockBehaviour.Properties.copy(Blocks.CHEST).strength(5f).requiresCorrectToolForDrops().sound(SoundType.METAL), ModBlockEntities.VALYRIAN_CHEST::get), true);
 
     /* ORES */
     public static final RegistryObject<Block> VALYRIAN_ORE = registerBlock("valyrian_ore", () -> new DropExperienceBlock(BlockBehaviour.Properties.copy(Blocks.STONE).strength(3f, 3f).requiresCorrectToolForDrops().sound(SoundType.STONE), UniformInt.of(3, 7)));
@@ -54,13 +60,35 @@ public class ModBlocks {
     }
 
     private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block) {
+        return registerBlock(name, block, false);
+    }
+
+    private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block, boolean withCustomRenderer) {
         RegistryObject<T> toReturn = BLOCKS.register(name, block);
-        registerBlockItem(name, toReturn);
+        if (withCustomRenderer) {
+            registerBlockItemWithRenderer(name, toReturn);
+        } else {
+            registerBlockItem(name, toReturn);
+        }
         return toReturn;
     }
 
     private static <T extends Block> void registerBlockItem(String name, RegistryObject<T> block) {
         ModItems.ITEMS.register(name, () -> new BlockItem(block.get(), new Item.Properties()));
+    }
+
+    private static <T extends Block> void registerBlockItemWithRenderer(String name, RegistryObject<T> block) {
+        ModItems.ITEMS.register(name, () -> new BlockItem(block.get(), new Item.Properties()) {
+            @Override
+            public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+                consumer.accept(new IClientItemExtensions() {
+                    @Override
+                    public BlockEntityWithoutLevelRenderer getCustomRenderer() {
+                        return new ModBEWLRenderer();
+                    }
+                });
+            }
+        });
     }
 
     public static void register(IEventBus eventBus) {
