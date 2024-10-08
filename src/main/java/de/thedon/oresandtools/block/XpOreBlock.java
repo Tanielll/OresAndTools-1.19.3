@@ -6,13 +6,14 @@ import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.valueproviders.IntProvider;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.RedStoneOreBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -20,8 +21,9 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 public class XpOreBlock extends RedStoneOreBlock {
-//    public static final BooleanProperty LIT = BlockStateProperties.LIT;
     public static final Vector3f XP_PARTICLE_COLOR = new Vector3f(0.5F, 1.0F, 0.0F);
     public static final DustParticleOptions XP = new DustParticleOptions(XP_PARTICLE_COLOR, 1.0F);
     private final IntProvider xpRange;
@@ -32,13 +34,15 @@ public class XpOreBlock extends RedStoneOreBlock {
     }
 
     @Override
-    public void attack(@NotNull BlockState pState, @NotNull Level pLevel, @NotNull BlockPos pPos, @NotNull Player pPlayer) {
+    @ParametersAreNonnullByDefault
+    public void attack(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer) {
         interact(pState, pLevel, pPos);
 //        super.attack(pState, pLevel, pPos, pPlayer);
     }
 
     @Override
-    public void stepOn(@NotNull Level pLevel, @NotNull BlockPos pPos, @NotNull BlockState pState, Entity pEntity) {
+    @ParametersAreNonnullByDefault
+    public void stepOn(Level pLevel, BlockPos pPos, BlockState pState, Entity pEntity) {
         if (!pEntity.isSteppingCarefully()) {
             interact(pState, pLevel, pPos);
         }
@@ -46,15 +50,17 @@ public class XpOreBlock extends RedStoneOreBlock {
     }
 
     @Override
-    public @NotNull InteractionResult use(@NotNull BlockState pState, Level pLevel, @NotNull BlockPos pPos, @NotNull Player pPlayer, @NotNull InteractionHand pHand, @NotNull BlockHitResult pHit) {
+    @ParametersAreNonnullByDefault
+    protected @NotNull ItemInteractionResult useItemOn(ItemStack pStack, BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHitResult) {
         if (pLevel.isClientSide) {
             spawnParticles(pLevel, pPos);
         } else {
             interact(pState, pLevel, pPos);
         }
 
-        ItemStack itemstack = pPlayer.getItemInHand(pHand);
-        return itemstack.getItem() instanceof BlockItem && (new BlockPlaceContext(pPlayer, pHand, itemstack, pHit)).canPlace() ? InteractionResult.PASS : InteractionResult.SUCCESS;
+        return pStack.getItem() instanceof BlockItem && new BlockPlaceContext(pPlayer, pHand, pStack, pHitResult).canPlace()
+                ? ItemInteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION
+                : ItemInteractionResult.SUCCESS;
     }
 
     private static void interact(BlockState pState, Level pLevel, BlockPos pPos) {
@@ -62,20 +68,20 @@ public class XpOreBlock extends RedStoneOreBlock {
         if (!pState.getValue(LIT)) {
             pLevel.setBlock(pPos, pState.setValue(LIT, true), 3);
         }
-
     }
 
     @Override
-    public int getExpDrop(@NotNull BlockState state, net.minecraft.world.level.@NotNull LevelReader world, @NotNull RandomSource randomSource, @NotNull BlockPos pos, int fortune, int silktouch) {
+    @ParametersAreNonnullByDefault
+    public int getExpDrop(BlockState state, LevelReader world, RandomSource randomSource, BlockPos pos, int fortune, int silktouch) {
         return silktouch == 0 ? xpRange.sample(randomSource) : 0;
     }
 
     @Override
-    public void animateTick(BlockState pState, @NotNull Level pLevel, @NotNull BlockPos pPos, @NotNull RandomSource pRandom) {
+    @ParametersAreNonnullByDefault
+    public void animateTick(BlockState pState, Level pLevel, BlockPos pPos, RandomSource pRandom) {
         if (pState.getValue(LIT)) {
             spawnParticles(pLevel, pPos);
         }
-
     }
 
     private static void spawnParticles(Level pLevel, BlockPos pPos) {

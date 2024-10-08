@@ -18,7 +18,8 @@ import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.DoubleBlockCombiner;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.ChestType;
 import org.jetbrains.annotations.NotNull;
@@ -116,6 +117,6 @@ public class ValyrianChestRenderer extends ChestRenderer<ValyrianChestBlockEntit
     }
 
     private static Material chestMaterial(String pChestName) {
-        return new Material(Sheets.CHEST_SHEET, new ResourceLocation("entity/chest/" + pChestName));
+        return new Material(Sheets.CHEST_SHEET, ResourceLocation.withDefaultNamespace("entity/chest/" + pChestName));
     }
 }

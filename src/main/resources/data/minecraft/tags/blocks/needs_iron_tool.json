@@ -1,9 +1,0 @@
-{
-  "replace": false,
-  "values": [
-    "oresandtools:steel_block",
-    "oresandtools:uranium_ore",
-    "oresandtools:molten_uranium_ore",
-    "oresandtools:deepslate_uranium_ore"
-  ]
-}

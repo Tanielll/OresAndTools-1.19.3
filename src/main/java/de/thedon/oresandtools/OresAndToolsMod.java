@@ -5,7 +5,6 @@ import de.thedon.oresandtools.block.ModBlocks;
 import de.thedon.oresandtools.config.ClientConfig;
 import de.thedon.oresandtools.config.CommonConfig;
 import de.thedon.oresandtools.entity.ModBlockEntities;
-import de.thedon.oresandtools.entity.ValyrianChestBlockEntity;
 import de.thedon.oresandtools.inventory.BackpackScreen;
 import de.thedon.oresandtools.inventory.ModMenuTypes;
 import de.thedon.oresandtools.inventory.ValyrianChestScreen;
@@ -20,7 +19,6 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -34,8 +32,8 @@ public class OresAndToolsMod {
     public static final String MOD_ID = "oresandtools";
     public static final Logger LOGGER = LogUtils.getLogger();
 
-    public OresAndToolsMod() {
-        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+    public OresAndToolsMod(FMLJavaModLoadingContext context) {
+        IEventBus modEventBus = context.getModEventBus();
 
         ModCreativeModeTabs.register(modEventBus);
 
@@ -48,8 +46,8 @@ public class OresAndToolsMod {
 
         modEventBus.addListener(this::commonSetup);
 
-        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientConfig.SPEC, MOD_ID + "-client.toml");
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, CommonConfig.SPEC, MOD_ID + "-common.toml");
+        context.registerConfig(ModConfig.Type.CLIENT, ClientConfig.SPEC, MOD_ID + "-client.toml");
+        context.registerConfig(ModConfig.Type.COMMON, CommonConfig.SPEC, MOD_ID + "-common.toml");
 
         MinecraftForge.EVENT_BUS.register(this);
 
@@ -59,7 +57,7 @@ public class OresAndToolsMod {
     private void commonSetup(final FMLCommonSetupEvent event) { }
 
     private void addCreative(BuildCreativeModeTabContentsEvent event) {
-        if (event.getTab() == ModCreativeModeTabs.MAIN_TAB.get()) {
+        if (event.getTabKey() == ModCreativeModeTabs.MAIN_TAB.getKey()) {
             event.accept(ModItems.STEEL_CHUNK.get());
             event.accept(ModItems.STEEL_INGOT.get());
             event.accept(ModItems.VALYRIAN_DUST.get());
@@ -87,7 +85,7 @@ public class OresAndToolsMod {
             event.accept(ModBlocks.URANIUM_ORE.get());
             event.accept(ModBlocks.DEEPSLATE_URANIUM_ORE.get());
         }
-        if (event.getTab() == ModCreativeModeTabs.TOOLS_TAB.get()) {
+        if (event.getTabKey() == ModCreativeModeTabs.TOOLS_TAB.getKey()) {
             event.accept(ModItems.COPPER_SHOVEL.get());
             event.accept(ModItems.COPPER_PICKAXE.get());
             event.accept(ModItems.COPPER_AXE.get());
@@ -117,7 +115,7 @@ public class OresAndToolsMod {
             event.accept(ModItems.OBSIDIAN_AXE.get());
             event.accept(ModItems.OBSIDIAN_HOE.get());
         }
-        if (event.getTab() == ModCreativeModeTabs.COMBAT_TAB.get()) {
+        if (event.getTabKey() == ModCreativeModeTabs.COMBAT_TAB.getKey()) {
             event.accept(ModItems.COPPER_SWORD.get());
             event.accept(ModItems.STEEL_SWORD.get());
             event.accept(ModItems.HARDENED_DIAMOND_SWORD.get());

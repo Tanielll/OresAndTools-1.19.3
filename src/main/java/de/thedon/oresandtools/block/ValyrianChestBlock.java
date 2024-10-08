@@ -1,23 +1,25 @@
 package de.thedon.oresandtools.block;
 
+import com.mojang.serialization.MapCodec;
 import de.thedon.oresandtools.OresAndToolsMod;
-import de.thedon.oresandtools.entity.LargeValyrianChestBlockEntity;
+import de.thedon.oresandtools.entity.ModBlockEntities;
 import de.thedon.oresandtools.entity.ValyrianChestBlockEntity;
 import de.thedon.oresandtools.inventory.ValyrianChestMenu;
 import it.unimi.dsi.fastutil.floats.Float2FloatFunction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.Mth;
+import net.minecraft.stats.Stat;
+import net.minecraft.stats.Stats;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.*;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.animal.Cat;
+import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -31,53 +33,57 @@ import net.minecraft.world.level.block.state.properties.*;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.wrapper.CombinedInvWrapper;
-import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.BiPredicate;
 import java.util.function.Supplier;
 
-public class ValyrianChestBlock extends BaseEntityBlock {
+public class ValyrianChestBlock extends BaseEntityBlock implements SimpleWaterloggedBlock {
+    public static final MapCodec<ValyrianChestBlock> CODEC = simpleCodec(properties -> new ValyrianChestBlock(properties, ModBlockEntities.VALYRIAN_CHEST::get));
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     public static final EnumProperty<ChestType> TYPE = BlockStateProperties.CHEST_TYPE;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final int EVENT_SET_OPEN_COUNT = 1;
     protected static final int AABB_OFFSET = 1;
     protected static final int AABB_HEIGHT = 14;
-    protected static final VoxelShape NORTH_AABB = Block.box(1.0D, 0.0D, 0.0D, 15.0D, 14.0D, 15.0D);
-    protected static final VoxelShape SOUTH_AABB = Block.box(1.0D, 0.0D, 1.0D, 15.0D, 14.0D, 16.0D);
-    protected static final VoxelShape WEST_AABB = Block.box(0.0D, 0.0D, 1.0D, 15.0D, 14.0D, 15.0D);
-    protected static final VoxelShape EAST_AABB = Block.box(1.0D, 0.0D, 1.0D, 16.0D, 14.0D, 15.0D);
-    protected static final VoxelShape AABB = Block.box(1.0D, 0.0D, 1.0D, 15.0D, 14.0D, 15.0D);
+    protected static final VoxelShape NORTH_AABB = Block.box(1.0, 0.0, 0.0, 15.0, 14.0, 15.0);
+    protected static final VoxelShape SOUTH_AABB = Block.box(1.0, 0.0, 1.0, 15.0, 14.0, 16.0);
+    protected static final VoxelShape WEST_AABB = Block.box(0.0, 0.0, 1.0, 15.0, 14.0, 15.0);
+    protected static final VoxelShape EAST_AABB = Block.box(1.0, 0.0, 1.0, 16.0, 14.0, 15.0);
+    protected static final VoxelShape AABB = Block.box(1.0, 0.0, 1.0, 15.0, 14.0, 15.0);
 
-    private static final DoubleBlockCombiner.Combiner<ValyrianChestBlockEntity, Optional<IItemHandler>> CHEST_COMBINER = new DoubleBlockCombiner.Combiner<>() {
-        public @NotNull Optional<IItemHandler> acceptDouble(@NotNull ValyrianChestBlockEntity pFirst, @NotNull ValyrianChestBlockEntity pSecond) {
-            return Optional.of(new CombinedInvWrapper(pFirst.getInventory(), pSecond.getInventory()));
+    private static final DoubleBlockCombiner.Combiner<ValyrianChestBlockEntity, Optional<Container>> CHEST_COMBINER = new DoubleBlockCombiner.Combiner<>() {
+        public @NotNull Optional<Container> acceptDouble(@NotNull ValyrianChestBlockEntity pFirst, @NotNull ValyrianChestBlockEntity pSecond) {
+            return Optional.of(new CompoundContainer(pFirst, pSecond));
         }
 
-        public @NotNull Optional<IItemHandler> acceptSingle(@NotNull ValyrianChestBlockEntity pEntity) {
-            return Optional.of(pEntity.getInventory());
+        public @NotNull Optional<Container> acceptSingle(@NotNull ValyrianChestBlockEntity pEntity) {
+            return Optional.of(pEntity);
         }
 
-        public @NotNull Optional<IItemHandler> acceptNone() {
+        public @NotNull Optional<Container> acceptNone() {
             return Optional.empty();
         }
     };
 
     private static final DoubleBlockCombiner.Combiner<ValyrianChestBlockEntity, Optional<MenuProvider>> MENU_PROVIDER_COMBINER = new DoubleBlockCombiner.Combiner<>() {
         public @NotNull Optional<MenuProvider> acceptDouble(final @NotNull ValyrianChestBlockEntity pFirst, final @NotNull ValyrianChestBlockEntity pSecond) {
+            final Container container = new CompoundContainer(pFirst, pSecond);
             return Optional.of(new MenuProvider() {
                 @Nullable
                 public AbstractContainerMenu createMenu(int pContainerId, @NotNull Inventory pInventory, @NotNull Player pPlayer) {
                     if (pFirst.canOpen(pPlayer) && pSecond.canOpen(pPlayer)) {
-                        return ValyrianChestMenu.menu9x12(pContainerId, pInventory, new LargeValyrianChestBlockEntity(pFirst, pSecond));
+                        pFirst.unpackLootTable(pInventory.player);
+                        pSecond.unpackLootTable(pInventory.player);
+                        return ValyrianChestMenu.menu9x12(pContainerId, pInventory, container);
                     } else {
                         return null;
                     }
@@ -87,7 +93,7 @@ public class ValyrianChestBlock extends BaseEntityBlock {
                     if (pFirst.hasCustomName()) {
                         return pFirst.getDisplayName();
                     } else {
-                        return (pSecond.hasCustomName() ? pSecond.getDisplayName() : Component.translatable(String.format("container.%s.valyrianChestDouble", OresAndToolsMod.MOD_ID)));
+                        return (pSecond.hasCustomName() ? pSecond.getDisplayName() : Component.translatable("container." + OresAndToolsMod.MOD_ID + ".large_valyrian_chest"));
                     }
                 }
             });
@@ -107,12 +113,8 @@ public class ValyrianChestBlock extends BaseEntityBlock {
     public ValyrianChestBlock(BlockBehaviour.Properties pProperties, Supplier<BlockEntityType<? extends ValyrianChestBlockEntity>> pBlockEntityType) {
         super(pProperties);
         this.blockEntityType = pBlockEntityType;
-        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(TYPE, ChestType.SINGLE).setValue(WATERLOGGED, Boolean.FALSE));
-    }
 
-    @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
-        pBuilder.add(FACING, TYPE, WATERLOGGED);
+        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(TYPE, ChestType.SINGLE).setValue(WATERLOGGED, Boolean.FALSE));
     }
 
     public static DoubleBlockCombiner.BlockType getBlockType(BlockState pState) {
@@ -125,21 +127,28 @@ public class ValyrianChestBlock extends BaseEntityBlock {
     }
 
     @Override
-    @SuppressWarnings("deprecation")
+    protected @NotNull MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
+    }
+
+    @Override
     public @NotNull RenderShape getRenderShape(@NotNull BlockState pState) {
         return RenderShape.ENTITYBLOCK_ANIMATED;
     }
 
     @Override
-    @SuppressWarnings("deprecation")
-    public @NotNull BlockState updateShape(BlockState pState, @NotNull Direction pFacing, @NotNull BlockState pFacingState, @NotNull LevelAccessor pLevel, @NotNull BlockPos pCurrentPos, @NotNull BlockPos pFacingPos) {
+    @ParametersAreNonnullByDefault
+    protected @NotNull BlockState updateShape(BlockState pState, Direction pFacing, BlockState pFacingState, LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pFacingPos) {
         if (pState.getValue(WATERLOGGED)) {
             pLevel.scheduleTick(pCurrentPos, Fluids.WATER, Fluids.WATER.getTickDelay(pLevel));
         }
 
         if (pFacingState.is(this) && pFacing.getAxis().isHorizontal()) {
             ChestType chesttype = pFacingState.getValue(TYPE);
-            if (pState.getValue(TYPE) == ChestType.SINGLE && chesttype != ChestType.SINGLE && pState.getValue(FACING) == pFacingState.getValue(FACING) && getConnectedDirection(pFacingState) == pFacing.getOpposite()) {
+            if (pState.getValue(TYPE) == ChestType.SINGLE
+                    && chesttype != ChestType.SINGLE
+                    && pState.getValue(FACING) == pFacingState.getValue(FACING)
+                    && getConnectedDirection(pFacingState) == pFacing.getOpposite()) {
                 return pState.setValue(TYPE, chesttype.getOpposite());
             }
         } else if (getConnectedDirection(pState) == pFacing) {
@@ -150,16 +159,17 @@ public class ValyrianChestBlock extends BaseEntityBlock {
     }
 
     @Override
-    @SuppressWarnings("deprecation")
-    public @NotNull VoxelShape getShape(BlockState pState, @NotNull BlockGetter pLevel, @NotNull BlockPos pPos, @NotNull CollisionContext pContext) {
+    @ParametersAreNonnullByDefault
+    public @NotNull VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
         if (pState.getValue(TYPE) == ChestType.SINGLE) {
             return AABB;
         } else {
             return switch (getConnectedDirection(pState)) {
-                default -> NORTH_AABB;
+                case NORTH -> NORTH_AABB;
                 case SOUTH -> SOUTH_AABB;
                 case WEST -> WEST_AABB;
                 case EAST -> EAST_AABB;
+                default -> NORTH_AABB;
             };
         }
     }
@@ -192,12 +202,14 @@ public class ValyrianChestBlock extends BaseEntityBlock {
             }
         }
 
-        return this.defaultBlockState().setValue(FACING, direction).setValue(TYPE, chesttype).setValue(WATERLOGGED, fluidstate.getType() == Fluids.WATER);
+        return this.defaultBlockState()
+                .setValue(FACING, direction)
+                .setValue(TYPE, chesttype)
+                .setValue(WATERLOGGED, fluidstate.getType() == Fluids.WATER);
     }
 
     @Override
-    @SuppressWarnings("deprecation")
-    public @NotNull FluidState getFluidState(BlockState pState) {
+    protected @NotNull FluidState getFluidState(BlockState pState) {
         return pState.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(pState);
     }
 
@@ -208,40 +220,31 @@ public class ValyrianChestBlock extends BaseEntityBlock {
     }
 
     @Override
-    public void setPlacedBy(@NotNull Level pLevel, @NotNull BlockPos pPos, @NotNull BlockState pState, LivingEntity pPlacer, ItemStack pStack) {
-        if (pStack.hasCustomHoverName()) {
-            BlockEntity blockentity = pLevel.getBlockEntity(pPos);
-            if (blockentity instanceof ValyrianChestBlockEntity valyrianChestBlockEntity) {
-                valyrianChestBlockEntity.setCustomName(pStack.getHoverName());
-            }
-        }
+    @ParametersAreNonnullByDefault
+    protected void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
+        Containers.dropContentsOnDestroy(pState, pNewState, pLevel, pPos);
+        super.onRemove(pState, pLevel, pPos, pNewState, pIsMoving);
     }
 
     @Override
-    @SuppressWarnings("deprecation")
-    public void onRemove(BlockState pState, @NotNull Level pLevel, @NotNull BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
-        if (!pState.is(pNewState.getBlock())) {
-            BlockEntity blockentity = pLevel.getBlockEntity(pPos);
-            if (blockentity instanceof ValyrianChestBlockEntity valyrianChestBlockEntity) {
-                valyrianChestBlockEntity.drops();
-                pLevel.updateNeighbourForOutputSignal(pPos, this);
-            }
-
-            super.onRemove(pState, pLevel, pPos, pNewState, pIsMoving);
-        }
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    public @NotNull InteractionResult use(@NotNull BlockState pState, Level pLevel, @NotNull BlockPos pPos, @NotNull Player pPlayer, @NotNull InteractionHand pHand, @NotNull BlockHitResult pHit) {
-        if (!pLevel.isClientSide) {
+    @ParametersAreNonnullByDefault
+    protected @NotNull InteractionResult useWithoutItem(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, BlockHitResult pHitResult) {
+        if (pLevel.isClientSide) {
+            return InteractionResult.SUCCESS;
+        } else {
             MenuProvider menuprovider = this.getMenuProvider(pState, pLevel, pPos);
             if (menuprovider != null) {
-                NetworkHooks.openScreen((ServerPlayer) pPlayer, menuprovider, pPos);
+                pPlayer.openMenu(menuprovider);
+                pPlayer.awardStat(this.getOpenChestStat());
+                PiglinAi.angerNearbyPiglins(pPlayer, true);
             }
-        }
 
-        return InteractionResult.sidedSuccess(pLevel.isClientSide());
+            return InteractionResult.CONSUME;
+        }
+    }
+
+    protected Stat<ResourceLocation> getOpenChestStat() {
+        return Stats.CUSTOM.get(Stats.OPEN_CHEST);
     }
 
     public BlockEntityType<? extends ValyrianChestBlockEntity> blockEntityType() {
@@ -249,34 +252,40 @@ public class ValyrianChestBlock extends BaseEntityBlock {
     }
 
     @Nullable
-    public static IItemHandler getInventory(ValyrianChestBlock pChest, BlockState pState, Level pLevel, BlockPos pPos, boolean pOverride) {
+    public static Container getContainer(ValyrianChestBlock pChest, BlockState pState, Level pLevel, BlockPos pPos, boolean pOverride) {
         return pChest.combine(pState, pLevel, pPos, pOverride).apply(CHEST_COMBINER).orElse(null);
     }
 
-    public DoubleBlockCombiner.@NotNull NeighborCombineResult<? extends ValyrianChestBlockEntity> combine(@NotNull BlockState pState, @NotNull Level pLevel, @NotNull BlockPos pPos, boolean pOverride) {
+    public DoubleBlockCombiner.NeighborCombineResult<? extends ValyrianChestBlockEntity> combine(BlockState pState, Level pLevel, BlockPos pPos, boolean pOverride) {
         BiPredicate<LevelAccessor, BlockPos> bipredicate;
+
         if (pOverride) {
             bipredicate = (levelAccessor, blockPos) -> false;
         } else {
-            bipredicate = ChestBlock::isChestBlockedAt;
+            bipredicate = ValyrianChestBlock::isChestBlockedAt;
         }
 
-        return DoubleBlockCombiner.combineWithNeigbour(this.blockEntityType.get(), ValyrianChestBlock::getBlockType, ValyrianChestBlock::getConnectedDirection, FACING, pState, pLevel, pPos, bipredicate);
+        return DoubleBlockCombiner.combineWithNeigbour(
+                this.blockEntityType.get(), ValyrianChestBlock::getBlockType, ValyrianChestBlock::getConnectedDirection, FACING, pState, pLevel, pPos, bipredicate
+        );
     }
 
     @Override
     @Nullable
-    public MenuProvider getMenuProvider(@NotNull BlockState pState, @NotNull Level pLevel, @NotNull BlockPos pPos) {
+    @ParametersAreNonnullByDefault
+    protected MenuProvider getMenuProvider(BlockState pState, Level pLevel, BlockPos pPos) {
         return this.combine(pState, pLevel, pPos, false).apply(MENU_PROVIDER_COMBINER).orElse(null);
     }
 
     public static DoubleBlockCombiner.Combiner<ValyrianChestBlockEntity, Float2FloatFunction> opennessCombiner(final LidBlockEntity pLid) {
-        return new DoubleBlockCombiner.Combiner<>() {
-            public @NotNull Float2FloatFunction acceptDouble(@NotNull ValyrianChestBlockEntity pFirst, @NotNull ValyrianChestBlockEntity pSecond) {
-                return (ticks) -> Math.max(pFirst.getOpenNess(ticks), pSecond.getOpenNess(ticks));
+        return new DoubleBlockCombiner.Combiner<ValyrianChestBlockEntity, Float2FloatFunction>() {
+            @ParametersAreNonnullByDefault
+            public @NotNull Float2FloatFunction acceptDouble(ValyrianChestBlockEntity pFirst, ValyrianChestBlockEntity pSecond) {
+                return ticks -> Math.max(pFirst.getOpenNess(ticks), pSecond.getOpenNess(ticks));
             }
 
-            public @NotNull Float2FloatFunction acceptSingle(@NotNull ValyrianChestBlockEntity pEntity) {
+            @ParametersAreNonnullByDefault
+            public @NotNull Float2FloatFunction acceptSingle(ValyrianChestBlockEntity pEntity) {
                 return pEntity::getOpenNess;
             }
 
@@ -286,72 +295,79 @@ public class ValyrianChestBlock extends BaseEntityBlock {
         };
     }
 
-    @Nullable
     @Override
-    public BlockEntity newBlockEntity(@NotNull BlockPos pPos, @NotNull BlockState pState) {
+    @ParametersAreNonnullByDefault
+    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
         return new ValyrianChestBlockEntity(pPos, pState);
     }
 
     @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, @NotNull BlockState pState, @NotNull BlockEntityType<T> pBlockEntityType) {
+    @ParametersAreNonnullByDefault
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
         return pLevel.isClientSide ? createTickerHelper(pBlockEntityType, this.blockEntityType(), ValyrianChestBlockEntity::lidAnimateTick) : null;
     }
 
+    public static boolean isChestBlockedAt(LevelAccessor pLevelAccessor, BlockPos pBlockPos) {
+        return isBlockedChestByBlock(pLevelAccessor, pBlockPos) || isCatSittingOnChest(pLevelAccessor, pBlockPos);
+    }
+
+    private static boolean isBlockedChestByBlock(BlockGetter pLevel, BlockPos pPos) {
+        BlockPos blockpos = pPos.above();
+        return pLevel.getBlockState(blockpos).isRedstoneConductor(pLevel, blockpos);
+    }
+
+    private static boolean isCatSittingOnChest(LevelAccessor pLevel, BlockPos pPos) {
+        List<Cat> list = pLevel.getEntitiesOfClass(Cat.class, new AABB((double)pPos.getX(), (double)(pPos.getY() + 1),
+                (double)pPos.getZ(), (double)(pPos.getX() + 1), (double)(pPos.getY() + 2), (double)(pPos.getZ() + 1)));
+
+        if (!list.isEmpty()) {
+            for (Cat cat : list) {
+                if (cat.isInSittingPose()) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     @Override
-    @SuppressWarnings("deprecation")
     public boolean hasAnalogOutputSignal(@NotNull BlockState pState) {
         return true;
     }
 
-    private static int getRedstoneSignalFromContainer(@Nullable IItemHandler pInventory) {
-        if (pInventory == null) {
-            return 0;
-        } else {
-            int i = 0;
-            float f = 0.0F;
-
-            for(int j = 0; j < pInventory.getSlots(); ++j) {
-                ItemStack itemstack = pInventory.getStackInSlot(j);
-                if (!itemstack.isEmpty()) {
-                    f += (float)itemstack.getCount() / (float)Math.min(pInventory.getSlotLimit(j), itemstack.getMaxStackSize());
-                    ++i;
-                }
-            }
-
-            f /= (float)pInventory.getSlots();
-            return Mth.floor(f * 14.0F) + (i > 0 ? 1 : 0);
-        }
+    @Override
+    @ParametersAreNonnullByDefault
+    protected int getAnalogOutputSignal(BlockState pBlockState, Level pLevel, BlockPos pPos) {
+        return AbstractContainerMenu.getRedstoneSignalFromContainer(getContainer(this, pBlockState, pLevel, pPos, false));
     }
 
     @Override
-    @SuppressWarnings("deprecation")
-    public int getAnalogOutputSignal(@NotNull BlockState pBlockState, @NotNull Level pLevel, @NotNull BlockPos pPos) {
-        return getRedstoneSignalFromContainer(getInventory(this, pBlockState, pLevel, pPos, false));
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
     public @NotNull BlockState rotate(BlockState pState, Rotation pRotation) {
         return pState.setValue(FACING, pRotation.rotate(pState.getValue(FACING)));
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public @NotNull BlockState mirror(BlockState pState, Mirror pMirror) {
         BlockState rotated = pState.rotate(pMirror.getRotation(pState.getValue(FACING)));
-        return pMirror == Mirror.NONE ? rotated : rotated.setValue(TYPE, rotated.getValue(TYPE).getOpposite());  // Forge: Fixed MC-134110 Structure mirroring breaking apart double chests
+        return pMirror == Mirror.NONE ? rotated : rotated.setValue(TYPE, rotated.getValue(TYPE).getOpposite());
     }
 
     @Override
-    @SuppressWarnings("deprecation")
-    public boolean isPathfindable(@NotNull BlockState pState, @NotNull BlockGetter pLevel, @NotNull BlockPos pPos, @NotNull PathComputationType pType) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
+        pBuilder.add(FACING, TYPE, WATERLOGGED);
+    }
+
+    @Override
+    @ParametersAreNonnullByDefault
+    protected boolean isPathfindable(BlockState pState, PathComputationType pPathComputationType) {
         return false;
     }
 
     @Override
-    @SuppressWarnings("deprecation")
-    public void tick(@NotNull BlockState pState, ServerLevel pLevel, @NotNull BlockPos pPos, @NotNull RandomSource pRandom) {
+    @ParametersAreNonnullByDefault
+    public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
         BlockEntity blockentity = pLevel.getBlockEntity(pPos);
         if (blockentity instanceof ValyrianChestBlockEntity valyrianChestBlockEntity) {
             valyrianChestBlockEntity.recheckOpen();

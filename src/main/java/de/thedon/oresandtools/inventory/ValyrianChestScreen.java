@@ -9,8 +9,8 @@ import net.minecraft.world.entity.player.Inventory;
 import org.jetbrains.annotations.NotNull;
 
 public class ValyrianChestScreen extends AbstractContainerScreen<ValyrianChestMenu> {
-    private static final ResourceLocation CONTAINER_BACKGROUND_6x9 = new ResourceLocation("textures/gui/container/generic_54.png");
-    private static final ResourceLocation CONTAINER_BACKGROUND_9x12 = new ResourceLocation(OresAndToolsMod.MOD_ID, "textures/gui/container/generic_108.png");
+    private static final ResourceLocation CONTAINER_BACKGROUND_6x9 = ResourceLocation.withDefaultNamespace("textures/gui/container/generic_54.png");
+    private static final ResourceLocation CONTAINER_BACKGROUND_9x12 = ResourceLocation.fromNamespaceAndPath(OresAndToolsMod.MOD_ID, "textures/gui/container/generic_108.png");
 
     private final ResourceLocation background;
     private final int containerRows;
@@ -45,7 +45,7 @@ public class ValyrianChestScreen extends AbstractContainerScreen<ValyrianChestMe
 
     @Override
     public void render(@NotNull GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
-        this.renderBackground(pGuiGraphics);
+        this.renderBackground(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
         super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
         this.renderTooltip(pGuiGraphics, pMouseX, pMouseY);
     }
@@ -58,7 +58,7 @@ public class ValyrianChestScreen extends AbstractContainerScreen<ValyrianChestMe
     }
 
     @Override
-    protected void renderBg(GuiGraphics pGuiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
+    protected void renderBg(@NotNull GuiGraphics pGuiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
         if (this.background == CONTAINER_BACKGROUND_6x9) {

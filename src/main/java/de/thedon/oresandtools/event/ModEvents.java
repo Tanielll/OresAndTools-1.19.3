@@ -3,17 +3,24 @@ package de.thedon.oresandtools.event;
 import de.thedon.oresandtools.OresAndToolsMod;
 import de.thedon.oresandtools.block.ModBlocks;
 import de.thedon.oresandtools.config.CommonConfig;
-import de.thedon.oresandtools.item.ModArmorItem;
+import de.thedon.oresandtools.item.ModArmorMaterials;
 import de.thedon.oresandtools.item.ModItems;
+import de.thedon.oresandtools.item.ModToolTiers;
+import de.thedon.oresandtools.item.custom.ModArmorItem;
+import de.thedon.oresandtools.util.ModTags;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.monster.AbstractSkeleton;
+import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -21,11 +28,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TieredItem;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.item.ItemExpireEvent;
@@ -40,7 +46,6 @@ import net.minecraftforge.fml.common.Mod;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class ModEvents {
     @Mod.EventBusSubscriber(modid = OresAndToolsMod.MOD_ID)
@@ -85,10 +90,10 @@ public class ModEvents {
                         boolean allHotDiamond = true;
                         for (ItemStack itemStack : armorItems) {
                             if (itemStack.getItem() instanceof ModArmorItem armorItem) {
-                                if (armorItem.getMaterial() != ModItems.ModArmorMaterials.VALYRIAN) {
+                                if (armorItem.getMaterial() != ModArmorMaterials.VALYRIAN) {
                                     allValyrian = false;
                                 }
-                                if (armorItem.getMaterial() != ModItems.ModArmorMaterials.HOT_H_DIAMOND) {
+                                if (armorItem.getMaterial() != ModArmorMaterials.HOT_H_DIAMOND) {
                                     allHotDiamond = false;
                                 }
                             } else {
@@ -115,10 +120,10 @@ public class ModEvents {
         @SubscribeEvent
         public static void onUndeadAttackedByHotDiaTool(AttackEntityEvent event) {
             if (event.getEntity().getMainHandItem().getItem() instanceof TieredItem tieredItem) {
-                if (tieredItem.getTier() == ModItems.ModTiers.HOT_H_DIAMOND && !CommonConfig.DISABLE_HOT_DIA_FIRE_ASPECT.get()) {
+                if (tieredItem.getTier() == ModToolTiers.HOT_HARDENED_DIAMOND && !CommonConfig.DISABLE_HOT_DIA_FIRE_ASPECT.get()) {
                     if (event.getTarget().isAlive()) {
                         if (event.getTarget() instanceof LivingEntity target) {
-                            if (target.getMobType() == MobType.UNDEAD) {
+                            if (target instanceof Zombie || target instanceof AbstractSkeleton) {
                                 target.setRemainingFireTicks(CommonConfig.HOT_DIA_FIRE_ASPECT_DURATION.get());
                             }
                         }
@@ -129,18 +134,22 @@ public class ModEvents {
     
         @SubscribeEvent
         public static void onBlockBreakByHotDiaTool(BlockEvent.BreakEvent event) {
+            RegistryAccess registryAccess = event.getLevel().registryAccess();
             Player player = event.getPlayer();
             if (!player.isCreative() && !player.isSpectator()) {
                 if (player.getMainHandItem().getItem() instanceof TieredItem tieredItem) {
-                    if (tieredItem.getTier() == ModItems.ModTiers.HOT_H_DIAMOND) {
-                        Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(player.getMainHandItem());
+                    if (tieredItem.getTier() == ModToolTiers.HOT_HARDENED_DIAMOND) {
+                        ItemEnchantments enchantments = player.getMainHandItem().getEnchantments();
+                        Holder<Enchantment> silkTouch = Enchantments.SILK_TOUCH.getOrThrow(registryAccess);
+                        Holder<Enchantment> fortune = Enchantments.FORTUNE.getOrThrow(registryAccess);
                         int fortuneLevel = 0;
-                        boolean silkTouch = enchantments.containsKey(Enchantments.SILK_TOUCH);
-                        if (enchantments.containsKey(Enchantments.BLOCK_FORTUNE)) {
-                            fortuneLevel = enchantments.get(Enchantments.BLOCK_FORTUNE);
+                        boolean hasSilkTouch = enchantments.keySet().contains(silkTouch);
+                        if (enchantments.keySet().contains(fortune)) {
+                            fortuneLevel = enchantments.getLevel(fortune);
                         }
-                        if (!silkTouch) {
+                        if (!hasSilkTouch) {
                             if (event.getLevel() instanceof Level level) {
+                                BlockState blockState = event.getState();
                                 Block block = event.getState().getBlock();
                                 int xpAmount = block.getExpDrop(event.getState(), level, level.getRandom(), event.getPos(), fortuneLevel, 0);
                                 if (xpAmount == 0) {
@@ -148,17 +157,17 @@ public class ModEvents {
                                 }
                                 BlockPos pos = event.getPos();
                                 level.addFreshEntity(new ExperienceOrb(level, pos.getX(), pos.getY(), pos.getZ(), xpAmount));
-                                if (block == Blocks.COPPER_ORE || block == Blocks.DEEPSLATE_COPPER_ORE) {
+                                if (blockState.is(BlockTags.COPPER_ORES)) {
                                     doBlockDrops(level, ModBlocks.MOLTEN_COPPER_ORE.get(), pos, Items.COPPER_INGOT, fortuneLevel);
-                                } else if (block == Blocks.IRON_ORE || block == Blocks.DEEPSLATE_IRON_ORE) {
+                                } else if (blockState.is(BlockTags.IRON_ORES)) {
                                     doBlockDrops(level, ModBlocks.MOLTEN_IRON_ORE.get(), pos, Items.IRON_INGOT, fortuneLevel);
-                                } else if (block == Blocks.GOLD_ORE || block == Blocks.DEEPSLATE_GOLD_ORE) {
+                                } else if (blockState.is(BlockTags.GOLD_ORES)) {
                                     doBlockDrops(level, ModBlocks.MOLTEN_GOLD_ORE.get(), pos, Items.GOLD_INGOT, fortuneLevel);
-                                } else if (block == ModBlocks.URANIUM_ORE.get() || block == ModBlocks.DEEPSLATE_URANIUM_ORE.get()) {
+                                } else if (blockState.is(ModTags.Blocks.URANIUM_ORES)) {
                                     doBlockDrops(level, ModBlocks.MOLTEN_URANIUM_ORE.get(), pos, ModItems.URANIUM_INGOT.get(), fortuneLevel);
-                                } else if (block == Blocks.STONE || block == Blocks.COBBLESTONE) {
+                                } else if (blockState.is(ModTags.Blocks.MELTABLE_TO_STONE)) {
                                     doBlockDrops(level, ModBlocks.MOLTEN_STONE.get(), pos, null, fortuneLevel);
-                                } else if (block == Blocks.SAND || block == Blocks.RED_SAND) {
+                                } else if (blockState.is(BlockTags.SAND)) {
                                     doBlockDrops(level, ModBlocks.MOLTEN_SAND.get(), pos, null, fortuneLevel);
                                 }
                             }

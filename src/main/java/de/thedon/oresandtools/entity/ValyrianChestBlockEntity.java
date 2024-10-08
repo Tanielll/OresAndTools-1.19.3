@@ -1,19 +1,19 @@
 package de.thedon.oresandtools.entity;
 
-import de.thedon.oresandtools.block.ModBlocks;
-import de.thedon.oresandtools.block.ValyrianChestBlock;
+import de.thedon.oresandtools.OresAndToolsMod;
 import de.thedon.oresandtools.inventory.ValyrianChestMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.Containers;
-import net.minecraft.world.MenuProvider;
-import net.minecraft.world.Nameable;
-import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.CompoundContainer;
+import net.minecraft.world.Container;
+import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -21,92 +21,87 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.entity.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.ChestType;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-public class ValyrianChestBlockEntity extends BlockEntity implements MenuProvider, Nameable, LidBlockEntity {
+import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.Objects;
+
+public class ValyrianChestBlockEntity extends RandomizableContainerBlockEntity implements LidBlockEntity {
     private final ContainerOpenersCounter openersCounter = new ContainerOpenersCounter() {
-        protected void onOpen(@NotNull Level pLevel, @NotNull BlockPos pPos, @NotNull BlockState pState) {
+        @ParametersAreNonnullByDefault
+        protected void onOpen(Level pLevel, BlockPos pPos, BlockState pState) {
             ValyrianChestBlockEntity.playSound(pLevel, pPos, pState, SoundEvents.CHEST_OPEN);
         }
 
-        protected void onClose(@NotNull Level pLevel, @NotNull BlockPos pPos, @NotNull BlockState pState) {
+        @ParametersAreNonnullByDefault
+        protected void onClose(Level pLevel, BlockPos pPos, BlockState pState) {
             ValyrianChestBlockEntity.playSound(pLevel, pPos, pState, SoundEvents.CHEST_CLOSE);
         }
 
-        protected void openerCountChanged(@NotNull Level pLevel, @NotNull BlockPos pPos, @NotNull BlockState pState, int pEventId, int pEventParam) {
+        @ParametersAreNonnullByDefault
+        protected void openerCountChanged(Level pLevel, BlockPos pPos, BlockState pState, int pEventId, int pEventParam) {
             ValyrianChestBlockEntity.this.signalOpenCount(pLevel, pPos, pState, pEventId, pEventParam);
         }
 
-        protected boolean isOwnContainer(Player pPlayer) {
-            if (!(pPlayer.containerMenu instanceof ValyrianChestMenu menu)) {
+        protected boolean isOwnContainer(Player player) {
+            if (!(player.containerMenu instanceof ValyrianChestMenu)) {
                 return false;
             } else {
-                IItemHandler itemHandler = menu.getInventory();
-                return itemHandler == ValyrianChestBlockEntity.this.inventory;
+                Container container = ((ValyrianChestMenu) player.containerMenu).getContainer();
+                return container instanceof ValyrianChestBlockEntity
+                    || container instanceof CompoundContainer && ((CompoundContainer) container).contains(ValyrianChestBlockEntity.this);
             }
         }
     };
 
-    @Nullable
-    private Component name;
-    private ItemStackHandler inventory = new ItemStackHandler(54) {
-        @Override
-        protected void onContentsChanged(int slot) {
-            setChanged();
+    private static final int EVENT_SET_OPEN_COUNT = 1;
+    private NonNullList<ItemStack> items;
+
+    private final ChestLidController chestLidController = new ChestLidController();
+
+    public ValyrianChestBlockEntity(BlockPos blockPos, BlockState blockState) {
+        this(ModBlockEntities.VALYRIAN_CHEST.get(), blockPos, blockState);
+    }
+
+    public ValyrianChestBlockEntity(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
+        super(blockEntityType, blockPos, blockState);
+        this.items = NonNullList.withSize(54, ItemStack.EMPTY);
+    }
+
+    @Override
+    public int getContainerSize() {
+        return this.getItems().size();
+    }
+
+    @Override
+    protected @NotNull Component getDefaultName() {
+        return Component.translatable("block." + OresAndToolsMod.MOD_ID + ".valyrian_chest");
+    }
+
+    @Override
+    @ParametersAreNonnullByDefault
+    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
+        super.loadAdditional(pTag, pRegistries);
+
+        this.items = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
+
+        if (!this.tryLoadLootTable(pTag)) {
+            ContainerHelper.loadAllItems(pTag, this.items, pRegistries);
         }
-    };
-    private LazyOptional<IItemHandler> lazyInventory = LazyOptional.empty();
-    protected final ChestLidController chestLidController = new ChestLidController();
-
-    protected ValyrianChestBlockEntity(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
-        super(pType, pPos, pBlockState);
-    }
-
-    public ValyrianChestBlockEntity(BlockPos pPos, BlockState pState) {
-        this(ModBlockEntities.VALYRIAN_CHEST.get(), pPos, pState);
     }
 
     @Override
-    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        return ForgeCapabilities.ITEM_HANDLER.orEmpty(cap, this.lazyInventory);
-    }
+    @ParametersAreNonnullByDefault
+    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
+        super.saveAdditional(pTag, pRegistries);
 
-    public IItemHandlerModifiable getInventory() {
-        return this.inventory;
-    }
-
-    @Override
-    public void onLoad() {
-        super.onLoad();
-        lazyInventory = LazyOptional.of(() -> inventory);
-    }
-
-    @Override
-    public void invalidateCaps() {
-        super.invalidateCaps();
-        lazyInventory.invalidate();
-    }
-
-    @Override
-    protected void saveAdditional(CompoundTag nbt) {
-        nbt.put("inventory", inventory.serializeNBT());
-        super.saveAdditional(nbt);
-    }
-
-    @Override
-    public void load(CompoundTag nbt) {
-        super.load(nbt);
-        inventory.deserializeNBT(nbt.getCompound("inventory"));
+        if (!this.trySaveLootTable(pTag)) {
+            ContainerHelper.saveAllItems(pTag, this.items, pRegistries);
+        }
     }
 
     public static void lidAnimateTick(Level pLevel, BlockPos pPos, BlockState pState, ValyrianChestBlockEntity pBlockEntity) {
@@ -114,21 +109,22 @@ public class ValyrianChestBlockEntity extends BlockEntity implements MenuProvide
     }
 
     static void playSound(Level pLevel, BlockPos pPos, BlockState pState, SoundEvent pSound) {
-        ChestType chesttype = pState.getValue(ValyrianChestBlock.TYPE);
+        ChestType chesttype = pState.getValue(ChestBlock.TYPE);
         if (chesttype != ChestType.LEFT) {
-            double d0 = (double)pPos.getX() + 0.5D;
-            double d1 = (double)pPos.getY() + 0.5D;
-            double d2 = (double)pPos.getZ() + 0.5D;
+            double d0 = (double)pPos.getX() + 0.5;
+            double d1 = (double)pPos.getY() + 0.5;
+            double d2 = (double)pPos.getZ() + 0.5;
             if (chesttype == ChestType.RIGHT) {
-                Direction direction = ValyrianChestBlock.getConnectedDirection(pState);
-                d0 += (double)direction.getStepX() * 0.5D;
-                d2 += (double)direction.getStepZ() * 0.5D;
+                Direction direction = ChestBlock.getConnectedDirection(pState);
+                d0 += (double)direction.getStepX() * 0.5;
+                d2 += (double)direction.getStepZ() * 0.5;
             }
 
-            pLevel.playSound((Player)null, d0, d1, d2, pSound, SoundSource.BLOCKS, 0.5F, pLevel.random.nextFloat() * 0.1F + 0.9F);
+            pLevel.playSound(null, d0, d1, d2, pSound, SoundSource.BLOCKS, 0.5F, pLevel.random.nextFloat() * 0.1F + 0.9F);
         }
     }
 
+    @Override
     public boolean triggerEvent(int pId, int pType) {
         if (pId == 1) {
             this.chestLidController.shouldBeOpen(pType > 0);
@@ -138,103 +134,68 @@ public class ValyrianChestBlockEntity extends BlockEntity implements MenuProvide
         }
     }
 
-    public void startOpen(Player pPlayer) {
-        if (!this.remove && !pPlayer.isSpectator() && this.getLevel() != null) {
-            this.openersCounter.incrementOpeners(pPlayer, this.getLevel(), this.getBlockPos(), this.getBlockState());
+    @Override
+    public void startOpen(@NotNull Player pPlayer) {
+        if (!this.remove && !pPlayer.isSpectator()) {
+            this.openersCounter.incrementOpeners(pPlayer, Objects.requireNonNull(this.getLevel()), this.getBlockPos(), this.getBlockState());
         }
     }
 
-    public void stopOpen(Player pPlayer) {
-        if (!this.remove && !pPlayer.isSpectator() && this.getLevel() != null) {
-            this.openersCounter.decrementOpeners(pPlayer, this.getLevel(), this.getBlockPos(), this.getBlockState());
+    @Override
+    public void stopOpen(@NotNull Player pPlayer) {
+        if (!this.remove && !pPlayer.isSpectator()) {
+            this.openersCounter.decrementOpeners(pPlayer, Objects.requireNonNull(this.getLevel()), this.getBlockPos(), this.getBlockState());
         }
     }
 
-    public void drops() {
-        if (this.level != null) {
-            SimpleContainer container = new SimpleContainer(inventory.getSlots());
-            for (int i = 0; i < inventory.getSlots(); i++) {
-                container.setItem(i, inventory.getStackInSlot(i));
+    @Override
+    public @NotNull NonNullList<ItemStack> getItems() {
+        return this.items;
+    }
+
+    @Override
+    public void setItems(NonNullList<ItemStack> itemsIn) {
+        this.items = NonNullList.<ItemStack>withSize(this.getContainerSize(), ItemStack.EMPTY);
+
+        for (int i = 0; i < itemsIn.size(); i++) {
+            if (i < this.items.size()) {
+                this.getItems().set(i, itemsIn.get(i));
             }
-
-            Containers.dropContents(this.level, this.worldPosition, container);
         }
     }
 
     @Override
-    public boolean hasCustomName() {
-        return Nameable.super.hasCustomName();
+    public float getOpenNess(float partialTicks) {
+        return this.chestLidController.getOpenness(partialTicks);
     }
 
-    public void setCustomName(@NotNull Component pName) {
-        this.name = pName;
-    }
+    public static int getOpenCount(BlockGetter blockGetter, BlockPos blockPos) {
+        BlockState blockstate = blockGetter.getBlockState(blockPos);
 
-    @Override
-    public @NotNull Component getName() {
-        return this.name != null ? this.name : this.getDefaultName();
-    }
-
-
-    @Nullable
-    public Component getCustomName() { return this.name; }
-
-    public @NotNull Component getDefaultName() {
-        return Component.translatable(ModBlocks.VALYRIAN_CHEST.get().getDescriptionId());
-    }
-
-    @Override
-    public @NotNull Component getDisplayName() {
-        return this.getName();
-    }
-
-    @Nullable
-    @Override
-    public AbstractContainerMenu createMenu(int pContainerId, @NotNull Inventory pPlayerInventory, @NotNull Player pPlayer) {
-        return ValyrianChestMenu.menu6x9(pContainerId, pPlayerInventory, this);
-    }
-
-    public boolean canOpen(Player pPlayer) {
-        return !pPlayer.isSpectator();
-    }
-
-    @Override
-    public float getOpenNess(float pPartialTicks) {
-        return this.chestLidController.getOpenness(pPartialTicks);
-    }
-
-    public static int getOpenCount(BlockGetter pLevel, BlockPos pPos) {
-        BlockState blockstate = pLevel.getBlockState(pPos);
         if (blockstate.hasBlockEntity()) {
-            BlockEntity blockentity = pLevel.getBlockEntity(pPos);
-            if (blockentity instanceof ValyrianChestBlockEntity valyrianChestBlockEntity) {
-                return valyrianChestBlockEntity.openersCounter.getOpenerCount();
+            BlockEntity blockentity = blockGetter.getBlockEntity(blockPos);
+
+            if (blockentity instanceof ValyrianChestBlockEntity) {
+                return ((ValyrianChestBlockEntity) blockentity).openersCounter.getOpenerCount();
             }
         }
 
         return 0;
     }
 
-    public static void swapContents(ValyrianChestBlockEntity pChest, ValyrianChestBlockEntity pOtherChest) {
-        ItemStackHandler inventory1 = (ItemStackHandler) pChest.getInventory();
-        ItemStackHandler inventory2 = (ItemStackHandler) pOtherChest.getInventory();
-
-        int slotCount = Math.min(inventory1.getSlots(), inventory2.getSlots());
-        for (int i = 0; i < slotCount; i++) {
-            ItemStack tempStack = inventory1.getStackInSlot(i);
-            inventory1.setStackInSlot(i, inventory2.getStackInSlot(i));
-            inventory2.setStackInSlot(i, tempStack);
-        }
+    @Override
+    protected @NotNull AbstractContainerMenu createMenu(int pId, @NotNull Inventory pPlayer) {
+        return ValyrianChestMenu.menu6x9(pId, pPlayer, this);
     }
 
     public void recheckOpen() {
-        if (!this.remove && this.getLevel() != null) {
-            this.openersCounter.recheckOpeners(this.getLevel(), this.getBlockPos(), this.getBlockState());
+        if (!this.remove) {
+            this.openersCounter.recheckOpeners(Objects.requireNonNull(this.getLevel()), this.getBlockPos(), this.getBlockState());
         }
     }
 
-    protected void signalOpenCount(Level pLevel, BlockPos pPos, BlockState pState, int pEventId, int pEventParam) {
-        Block block = pState.getBlock();
-        pLevel.blockEvent(pPos, block, 1, pEventParam);
+    protected void signalOpenCount(Level level, BlockPos blockPos, BlockState blockState, int previousCount, int newCount) {
+        Block block = blockState.getBlock();
+        level.blockEvent(blockPos, block, 1, newCount);
     }
 }

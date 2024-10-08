@@ -12,19 +12,19 @@ public class PropertyRegistration {
     }
 
     private static void registerShieldProperty(Item shieldItem) {
-        ItemProperties.register(shieldItem, new ResourceLocation("blocking"),
+        ItemProperties.register(shieldItem, ResourceLocation.withDefaultNamespace("blocking"),
                 (itemStack, level, livingEntity, seed) -> livingEntity != null && livingEntity.isUsingItem() && livingEntity.getUseItem() == itemStack ? 1.0F : 0.0F);
     }
 
     private static void registerBowProperty(Item bowItem) {
-        ItemProperties.register(bowItem, new ResourceLocation("pull"), (itemStack, level, livingEntity, seed) -> {
+        ItemProperties.register(bowItem, ResourceLocation.withDefaultNamespace("pull"), (itemStack, level, livingEntity, seed) -> {
             if (livingEntity == null) {
                 return 0.0F;
             } else {
-                return livingEntity.getUseItem() != itemStack ? 0.0F : (float) (itemStack.getUseDuration() - livingEntity.getUseItemRemainingTicks()) / 20.0F;
+                return livingEntity.getUseItem() != itemStack ? 0.0F : (float) (itemStack.getUseDuration(livingEntity) - livingEntity.getUseItemRemainingTicks()) / 20.0F;
             }
         });
-        ItemProperties.register(bowItem, new ResourceLocation("pulling"),
+        ItemProperties.register(bowItem, ResourceLocation.withDefaultNamespace("pulling"),
                 (itemStack, level, livingEntity, seed) -> livingEntity != null && livingEntity.isUsingItem() && livingEntity.getUseItem() == itemStack ? 1.0F : 0.0F);
     }
 }

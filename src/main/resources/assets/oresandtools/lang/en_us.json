@@ -104,7 +104,7 @@
   "block.oresandtools.molten_stone" : "Molten Stone",
   "block.oresandtools.molten_sand" : "Molten Sand",
 
-  "container.oresandtools.valyrianChestDouble" : "Large Valyrian Chest",
+  "container.oresandtools.large_valyrian_chest" : "Large Valyrian Chest",
 
   "itemGroup.oresandtools.oat_main_tab": "OAT Mod",
   "itemGroup.oresandtools.oat_tools_tab": "OAT Tools",

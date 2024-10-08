@@ -2,29 +2,32 @@ package de.thedon.oresandtools.inventory;
 
 import de.thedon.oresandtools.item.ModItems;
 import net.minecraft.core.NonNullList;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.ContainerHelper;
-import net.minecraft.world.item.BlockItem;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.Nameable;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class BackpackItemStackHandler implements IItemHandlerModifiable {
+public class BackpackItemStackHandler implements IItemHandlerModifiable, MenuProvider, Nameable {
     private final ItemStack stack;
-    private CompoundTag cachedTag;
-    private NonNullList<ItemStack> itemStacksCache;
+    @Nullable
+    private Component name;
 
-    public BackpackItemStackHandler(ItemStack stack)
-    {
+    public BackpackItemStackHandler(ItemStack stack) {
         this.stack = stack;
+        this.name = stack.get(DataComponents.CUSTOM_NAME);
     }
 
     @Override
-    public int getSlots()
-    {
+    public int getSlots(){
         return 54;
     }
 
@@ -47,7 +50,6 @@ public class BackpackItemStackHandler implements IItemHandlerModifiable {
         validateSlotIndex(slot);
 
         NonNullList<ItemStack> itemStacks = getItemList();
-
         ItemStack existing = itemStacks.get(slot);
 
         int limit = Math.min(getSlotLimit(slot), stack.getMaxStackSize());
@@ -116,8 +118,7 @@ public class BackpackItemStackHandler implements IItemHandlerModifiable {
     }
 
     @Override
-    public int getSlotLimit(int slot)
-    {
+    public int getSlotLimit(int slot) {
         return 64;
     }
 
@@ -136,25 +137,43 @@ public class BackpackItemStackHandler implements IItemHandlerModifiable {
     }
 
     private NonNullList<ItemStack> getItemList() {
-        CompoundTag rootTag = this.stack.getTag();
-        if (cachedTag == null || !cachedTag.equals(rootTag))
-            itemStacksCache = refreshItemList(rootTag);
-        return itemStacksCache;
-    }
-
-    private NonNullList<ItemStack> refreshItemList(CompoundTag rootTag) {
         NonNullList<ItemStack> itemStacks = NonNullList.withSize(getSlots(), ItemStack.EMPTY);
-        if (rootTag != null && rootTag.contains("Items", CompoundTag.TAG_LIST)) {
-            ContainerHelper.loadAllItems(rootTag, itemStacks);
+        ItemContainerContents contents = stack.get(DataComponents.CONTAINER);
+        if (contents != null) {
+            contents.copyInto(itemStacks);
         }
-        cachedTag = rootTag;
         return itemStacks;
     }
 
     private void setItemList(NonNullList<ItemStack> itemStacks) {
-        CompoundTag existing = this.stack.getTag();
-        CompoundTag rootTag = ContainerHelper.saveAllItems(existing == null ? new CompoundTag() : existing, itemStacks);
-        this.stack.setTag(rootTag);
-        cachedTag = rootTag;
+        stack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(itemStacks));
+    }
+
+    @Nullable
+    @Override
+    public AbstractContainerMenu createMenu(int pId, @NotNull Inventory pInventory, @NotNull Player pPlayer) {
+        return new BackpackMenu(pId, pInventory, this);
+    }
+
+    @Override
+    public boolean hasCustomName() {
+        return Nameable.super.hasCustomName();
+    }
+
+    @Override
+    public @NotNull Component getName() {
+        return this.name != null ? this.name : this.getDefaultName();
+    }
+
+    @Nullable
+    public Component getCustomName() { return this.name; }
+
+    public @NotNull Component getDefaultName() {
+        return Component.translatable(ModItems.SHULKER_BACKPACK.get().getDescriptionId());
+    }
+
+    @Override
+    public @NotNull Component getDisplayName() {
+        return this.getName();
     }
 }

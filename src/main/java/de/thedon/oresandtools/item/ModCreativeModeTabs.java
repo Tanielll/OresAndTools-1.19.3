@@ -13,6 +13,7 @@ import net.minecraftforge.registries.RegistryObject;
 @Mod.EventBusSubscriber(modid = OresAndToolsMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModCreativeModeTabs {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, OresAndToolsMod.MOD_ID);
+
     public static RegistryObject<CreativeModeTab> MAIN_TAB = CREATIVE_MODE_TABS.register("oat_main_tab", () -> CreativeModeTab.builder()
             .title(Component.translatable("itemGroup." + OresAndToolsMod.MOD_ID + ".oat_main_tab"))
             .icon(() -> new ItemStack(ModItems.HARDENED_DIAMOND.get())).build());
